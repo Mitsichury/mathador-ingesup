@@ -25,9 +25,13 @@ namespace generateur
     /// </summary>
     public partial class MainWindow : Window
     {
+        public string Path = "";
+
         public MainWindow()
         {
             InitializeComponent();
+            Path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            filePath.Text = Path + "\\0_mathador.json";
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -75,6 +79,13 @@ namespace generateur
         private void exitButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void NbrOfEntry_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            string textChanged = ((TextBox) (e.OriginalSource)).Text;
+            int nbrEntry = (string.IsNullOrWhiteSpace(textChanged)) ? 0 : int.Parse(textChanged) ;
+            filePath.Text = Path + "\\" + nbrEntry + "_mathador.json";
         }
     }
 }

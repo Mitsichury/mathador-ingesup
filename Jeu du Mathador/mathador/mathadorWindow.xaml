@@ -24,10 +24,22 @@
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
-            <ComboBox Grid.Column="0">
-                <TextBlock x:Name="Value1"></TextBlock>
-                <TextBlock></TextBlock>
-            </ComboBox>
+            <Button Grid.Column="0" Background="Aqua" VerticalAlignment="Center" Click="ValueButton_OnClick">
+                <TextBlock Text="1" FontSize="50" TextAlignment="Center" />
+            </Button>
+            <Button Grid.Column="1" Background="Aqua" VerticalAlignment="Center" Click="ValueButton_OnClick">
+                <TextBlock Text="2" FontSize="50" TextAlignment="Center" />
+            </Button>
+            <Button Grid.Column="2" Background="Aqua" VerticalAlignment="Center" Click="ValueButton_OnClick">
+                <TextBlock Text="3" FontSize="50" TextAlignment="Center" />
+            </Button>
+            <Button Grid.Column="3" Background="Aqua" VerticalAlignment="Center" Click="ValueButton_OnClick">
+                <TextBlock Text="4" FontSize="50" TextAlignment="Center" />
+            </Button>
+            <Button Grid.Column="4" Background="Aqua" VerticalAlignment="Center" Click="ValueButton_OnClick">
+                <TextBlock Text="5" FontSize="50" TextAlignment="Center" />
+            </Button>
+            <TextBlock Grid.Column="5" Background="Aqua" Text="15" FontSize="100" TextAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
         <Grid Row="3">
             <Grid.ColumnDefinitions>
@@ -36,6 +48,26 @@
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                <Button>
+                    <TextBlock Text="+" FontSize="100" Height="150"/>
+                </Button>
+            </StackPanel>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <Button>
+                    <TextBlock Text="-" FontSize="100" Height="150"/>
+                </Button>
+            </StackPanel>
+            <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                <Button>
+                    <TextBlock Text="X" FontSize="80" Height="120"/>
+                </Button>
+            </StackPanel>
+            <StackPanel Grid.Column="3" VerticalAlignment="Center">
+                <Button>
+                    <TextBlock Text="/" FontSize="80" Height="125"/>
+                </Button>
+            </StackPanel>
         </Grid>
     </Grid>
 </Window>

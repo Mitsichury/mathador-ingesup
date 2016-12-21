@@ -23,6 +23,9 @@ namespace mathador
     {
         private string filePath;
 
+        public int Value1;
+        public int Value2;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -32,6 +35,15 @@ namespace mathador
         {
             InitializeComponent();
             filePath = FilePath;
+        }
+
+        private void ValueButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var textblock = e.OriginalSource as Button;
+            if(Value1 == 0)
+                Value1 = int.Parse(((TextBlock)textblock.Content).Text);
+            else
+                Value2 = int.Parse(((TextBlock)textblock.Content).Text);
         }
     }
 }
