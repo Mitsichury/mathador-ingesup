@@ -56,7 +56,17 @@ namespace generateur
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
-            e.Handled = regex.IsMatch(e.Text);
+            if (!regex.IsMatch(e.Text))
+            {
+                int value = int.Parse(((TextBox)e.OriginalSource).Text + e.Text);
+                if (value > 1000)
+                {
+                    ((TextBox)e.OriginalSource).Text = "999";
+                    e.Handled = true;
+                }
+            }
+            else
+                e.Handled = true;
         }
 
         private void generate_Click(object sender, RoutedEventArgs e)
@@ -84,7 +94,7 @@ namespace generateur
         private void NbrOfEntry_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             string textChanged = ((TextBox) (e.OriginalSource)).Text;
-            int nbrEntry = (string.IsNullOrWhiteSpace(textChanged)) ? 0 : int.Parse(textChanged) ;
+            long nbrEntry = (string.IsNullOrWhiteSpace(textChanged)) ? 0 : int.Parse(textChanged) ;
             filePath.Text = Path + "\\" + nbrEntry + "_mathador.json";
         }
     }
