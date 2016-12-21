@@ -4,6 +4,5 @@
              xmlns:local="clr-namespace:mathador"
              StartupUri="mathadorWindow.xaml">
     <Application.Resources>
-         
     </Application.Resources>
 </Application>
