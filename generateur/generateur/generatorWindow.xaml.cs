@@ -14,6 +14,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
+using WinForms = System.Windows.Forms;
+using mathador;
 
 namespace generateur
 {
@@ -29,7 +32,7 @@ namespace generateur
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new System.Windows.Forms.FolderBrowserDialog();
+            var dialog = new WinForms.FolderBrowserDialog();
             dialog.ShowDialog();
             filePath.Text = dialog.SelectedPath + "\\" + nbrOfEntry.Text + "_mathador.json";
         }
@@ -54,8 +57,24 @@ namespace generateur
 
         private void generate_Click(object sender, RoutedEventArgs e)
         {
-            generateEntries(Convert.ToInt32(nbrOfEntry.Text), filePath.Text);
+            if (!string.IsNullOrEmpty(filePath.Text) && filePath.Text[1] == ':')
+                if (!string.IsNullOrWhiteSpace(nbrOfEntry.Text))
+                {
+                    generateEntries(Convert.ToInt32(nbrOfEntry.Text), filePath.Text);
+                    error.Text = "";
+                    var mathador = new mathador.MainWindow(filePath.Text);
+                    this.Close();
+                    mathador.ShowDialog();
+                }
+                else
+                    error.Text = "Veuillez saisir un nombre !";
+            else
+                error.Text = "Ce dossier n'existe pas !";
+        }
+
+        private void exitButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
-}
 }
