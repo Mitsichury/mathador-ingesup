@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,6 +38,7 @@ namespace mathador
         {
             InitializeComponent();
             filePath = FilePath;
+            loadMathador();
         }
 
         #region XAMLVariable
@@ -69,6 +72,16 @@ namespace mathador
                 PropertyChanged(this, new PropertyChangedEventArgs("operator"));
             }
         }
+        private ObservableCollection<string> _historique = new ObservableCollection<string>();
+        public ObservableCollection<string> Historique
+        {
+            get { return _historique; }
+            set
+            {
+                _historique = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("historique"));
+            }
+        }
         #endregion
 
         private void ValueButton_OnClick(object sender, RoutedEventArgs e)
@@ -94,6 +107,15 @@ namespace mathador
             Calcul();
         }
 
+        private void loadMathador()
+        {
+            string[] mathadorStrings = File.ReadAllLines(filePath);
+            foreach (var mathadorString in mathadorStrings)
+            {
+                Console.WriteLine(mathadorString);
+            }
+        }
+
         private void Calcul()
         {
             if (!string.IsNullOrWhiteSpace(Value1) && !string.IsNullOrWhiteSpace(Value2) && !string.IsNullOrWhiteSpace(Operator))
@@ -116,6 +138,7 @@ namespace mathador
                         result = value1 * value2;
                         break;
                 }
+                Historique.Add(Value1 + " " + Operator + " " + Value2 + " = " + result);
                 ((TextBlock)firstSelectedButton.Content).Text = " ";
                 ((TextBlock)lastSelectedButton.Content).Text = result.ToString();
                 Value1 = "";

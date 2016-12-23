@@ -75,7 +75,7 @@
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <ListBox />
+            <ListView ItemsSource="{Binding Historique}" FontSize="40"/>
             <TextBlock Grid.Column="1" HorizontalAlignment="Left" FontSize="100" Text="{Binding Value1}" TextAlignment="Center" VerticalAlignment="Center" Margin="50,0,0,0" Background="LemonChiffon" Width="120"/>
             <TextBlock Grid.Column="1" HorizontalAlignment="Center" FontSize="100" Text="{Binding Operator}" TextAlignment="Center" VerticalAlignment="Center" Background="LemonChiffon" Width="70"/>
             <TextBlock Grid.Column="1" HorizontalAlignment="Right" FontSize="100" Text="{Binding Value2}" TextAlignment="Center" VerticalAlignment="Center" Margin="0,0,50,0" Background="LemonChiffon" Width="120"/>
