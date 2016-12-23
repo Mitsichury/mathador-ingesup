@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,8 +27,10 @@ namespace mathador
         public event PropertyChangedEventHandler PropertyChanged;
 
         private string filePath;
-        private Button firstSelectedButton;
-        private Button lastSelectedButton;
+        private Button firstSelectedValue;
+        private Button lastSelectedValue;
+        private Button SelectedOperator;
+
 
         public MainWindow()
         {
@@ -72,6 +75,16 @@ namespace mathador
                 PropertyChanged(this, new PropertyChangedEventArgs("operator"));
             }
         }
+        private string _errorMessage;
+        public string ErrorMessage
+        {
+            get { return _errorMessage; }
+            set
+            {
+                _errorMessage = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("errorMessage"));
+            }
+        }
         private ObservableCollection<string> _historique = new ObservableCollection<string>();
         public ObservableCollection<string> Historique
         {
@@ -87,23 +100,56 @@ namespace mathador
         private void ValueButton_OnClick(object sender, RoutedEventArgs e)
         {
             var button = e.OriginalSource as Button;
-            if (string.IsNullOrWhiteSpace(Value1))
+            if (button != firstSelectedValue && button != lastSelectedValue)
             {
-                Value1 = ((TextBlock)button.Content).Text;
-                firstSelectedButton = button;
+                if (string.IsNullOrWhiteSpace(Value1))
+                {
+                    Value1 = ((TextBlock) button.Content).Text;
+                    firstSelectedValue = button;
+                    firstSelectedValue.Background = Brushes.SaddleBrown;
+                }
+                else if (string.IsNullOrWhiteSpace(Value2))
+                {
+                    Value2 = ((TextBlock) button.Content).Text;
+                    lastSelectedValue = button;
+                    lastSelectedValue.Background = Brushes.SaddleBrown;
+                }
+                Calcul();
             }
-            else if (string.IsNullOrWhiteSpace(Value2))
+            else
             {
-                Value2 = ((TextBlock)button.Content).Text;
-                lastSelectedButton = button;
+                if (button == firstSelectedValue)
+                {
+                    Value1 = "";
+                    firstSelectedValue.Background = Brushes.Aqua;
+                    firstSelectedValue = null;
+                }
+                else
+                {
+                    Value2 = "";
+                    lastSelectedValue.Background = Brushes.Aqua;
+                    lastSelectedValue = null;
+                }
             }
-            Calcul();
         }
 
         private void OperatorButton_OnClick(object sender, RoutedEventArgs e)
         {
             var button = e.OriginalSource as Button;
-            Operator = ((TextBlock)button.Content).Text;
+            if (button != SelectedOperator)
+            {
+                if (SelectedOperator != null)
+                    SelectedOperator.Background = Brushes.LightGray;
+                SelectedOperator = button;
+                Operator = ((TextBlock)button.Content).Text;
+                SelectedOperator.Background = Brushes.Brown;
+            }
+            else
+            {
+                SelectedOperator.Background = Brushes.LightGray;
+                SelectedOperator = null;
+                Operator = "";
+            }
             Calcul();
         }
 
@@ -120,6 +166,7 @@ namespace mathador
         {
             if (!string.IsNullOrWhiteSpace(Value1) && !string.IsNullOrWhiteSpace(Value2) && !string.IsNullOrWhiteSpace(Operator))
             {
+                ErrorMessage = "";
                 int result = 0;
                 int value1 = int.Parse(Value1);
                 int value2 = int.Parse(Value2);
@@ -138,9 +185,23 @@ namespace mathador
                         result = value1 * value2;
                         break;
                 }
-                Historique.Add(Value1 + " " + Operator + " " + Value2 + " = " + result);
-                ((TextBlock)firstSelectedButton.Content).Text = " ";
-                ((TextBlock)lastSelectedButton.Content).Text = result.ToString();
+                if (result >= 0)
+                {
+                    Historique.Add(Value1 + " " + Operator + " " + Value2 + " = " + result);
+                    firstSelectedValue.IsEnabled = false;
+                    ((TextBlock)firstSelectedValue.Content).Text = " ";
+                    ((TextBlock)lastSelectedValue.Content).Text = result.ToString();
+                }
+                else
+                {
+                    firstSelectedValue.Background = Brushes.Aqua;
+                    ErrorMessage = "Résultat inférieur à 0 impossible !";
+                }
+                lastSelectedValue.Background = Brushes.Aqua;
+                SelectedOperator.Background = Brushes.LightGray;
+                firstSelectedValue = null;
+                lastSelectedValue = null;
+                SelectedOperator = null;
                 Value1 = "";
                 Value2 = "";
                 Operator = "";

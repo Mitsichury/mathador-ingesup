@@ -43,7 +43,7 @@ namespace generateur
 
         private void generateEntries(int nb, string path)
         {
-            string text = "{n:13}";
+            string text = "{n1:1,n2:2,n3:3,n4:4,n5:5,n:15}";
 
             List<String> lines = new List<string>();
             for (int i = 0; i < nb; i++)
