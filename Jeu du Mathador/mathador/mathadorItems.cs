@@ -16,19 +16,40 @@ namespace mathador
 
         private int ValueToFind;
 
+        private List<mathadorOper> MathadorOperList = new List<mathadorOper>();
 
+        public mathadorItems(int value1, int value2, int value3, int value4, int value5, int valueToFind)
+        {
+            Value1 = value1;
+            Value2 = value2;
+            Value3 = value3;
+            Value4 = value4;
+            Value5 = value5;
+            ValueToFind = valueToFind;
+        }
     }
 
-    class operation
+    class mathadorOper
     {
         private int Value1;
         private int Value2;
 
-        private Func<int, int> Operator;
+        private int Result;
 
-        public operation(int value1, int value2, Func<int, int> _operator)
+        /// <summary>
+        /// Grâce à ca, on a juste à utiliser la variable et l'opération se fait toute seul
+        /// </summary>
+        /// <example>
+        /// Func<int, int, int> plus = (a, b) => a + b;
+        /// </example>
+        private Func<int, int, int> Operator;
+
+        public mathadorOper(int value1, int value2, Func<int, int, int> _operator)
         {
-            
+            Value1 = value1;
+            Value2 = value2;
+            Operator = _operator;
+            Result = _operator(value1, value2);
         }
     }
 }
