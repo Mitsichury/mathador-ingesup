@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using Microsoft.Win32;
 using WinForms = System.Windows.Forms;
 using mathador;
+using System.Threading;
 
 namespace generateur
 {
@@ -26,6 +27,8 @@ namespace generateur
     public partial class MainWindow : Window
     {
         public string Path = "";
+        public readonly int MAX_AUTHORIZED = 1000000;
+        public string TEXT_PLAY = "Jouer";
 
         public MainWindow()
         {
@@ -38,19 +41,17 @@ namespace generateur
         {
             var dialog = new WinForms.FolderBrowserDialog();
             dialog.ShowDialog();
-            filePath.Text = dialog.SelectedPath + "\\" + nbrOfEntry.Text + "_mathador.json";
+            if (!dialog.SelectedPath.Equals(""))
+            {
+                filePath.Text = dialog.SelectedPath + "\\" + nbrOfEntry.Text + "_mathador.json";
+            }            
         }
 
-        private void generateEntries(int nb, string path)
+        private void generateFileThread(int nb, string path)
         {
-            string text = "{n1:1,n2:2,n3:3,n4:4,n5:5,n:15}";
-
-            List<String> lines = new List<string>();
-            for (int i = 0; i < nb; i++)
-            {
-                lines.Add(text);
-            }
-            File.AppendAllLines(@"" + path, lines);
+            AsyncCreateFile customThread = new AsyncCreateFile(nb, path, generate, error);
+            Thread t = new Thread(customThread.GenerateEntries);
+            t.Start();
         }
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
@@ -58,27 +59,26 @@ namespace generateur
             Regex regex = new Regex("[^0-9]+");
             if (!regex.IsMatch(e.Text))
             {
-                int value = int.Parse(((TextBox)e.OriginalSource).Text + e.Text);
-                if (value > 1000)
-                {
-                    ((TextBox)e.OriginalSource).Text = "999";
-                    e.Handled = true;
-                }
-            }
-            else
+                int value = formatNbEntry(((TextBox)e.OriginalSource).Text + e.Text);                
+                ((TextBox)e.OriginalSource).Text = value.ToString();
                 e.Handled = true;
+            }
         }
 
         private void generate_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(filePath.Text) && filePath.Text[1] == ':')
+            if (generate.Content.Equals(TEXT_PLAY))
+            {
+                var mathador = new mathador.MainWindow(filePath.Text);
+                this.Close();
+                mathador.ShowDialog();
+            }
+            else if (!string.IsNullOrEmpty(filePath.Text) && filePath.Text[1] == ':')
                 if (!string.IsNullOrWhiteSpace(nbrOfEntry.Text))
                 {
-                    generateEntries(Convert.ToInt32(nbrOfEntry.Text), filePath.Text);
+                    generateFileThread(Convert.ToInt32(nbrOfEntry.Text), filePath.Text);
                     error.Text = "";
-                    var mathador = new mathador.MainWindow(filePath.Text);
-                    this.Close();
-                    mathador.ShowDialog();
+                    generate.Content = "En cours....";
                 }
                 else
                     error.Text = "Veuillez saisir un nombre !";
@@ -93,9 +93,28 @@ namespace generateur
 
         private void NbrOfEntry_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            string textChanged = ((TextBox) (e.OriginalSource)).Text;
-            long nbrEntry = (string.IsNullOrWhiteSpace(textChanged)) ? 0 : int.Parse(textChanged) ;
+            string textChanged = ((TextBox)(e.OriginalSource)).Text;
+            int nbrEntry = (string.IsNullOrWhiteSpace(textChanged)) ? 0 : formatNbEntry(textChanged);
             filePath.Text = Path + "\\" + nbrEntry + "_mathador.json";
+        }
+
+        private int formatNbEntry(string s)
+        {
+            int value = 1;
+            try
+            {
+                value = int.Parse(s);
+                if(value > MAX_AUTHORIZED)
+                {
+                    value = MAX_AUTHORIZED;
+                }
+            }
+            catch (OverflowException)
+            {
+                value = MAX_AUTHORIZED;
+            }
+
+            return value;
         }
     }
 }

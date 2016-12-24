@@ -68,6 +68,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="AsyncCreateFile.cs" />
     <Compile Include="generatorWindow.xaml.cs">
       <DependentUpon>generatorWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
