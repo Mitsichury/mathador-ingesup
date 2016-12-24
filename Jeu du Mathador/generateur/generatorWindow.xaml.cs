@@ -28,6 +28,7 @@ namespace generateur
     {
         public string Path = "";
         public readonly int MAX_AUTHORIZED = 1000000;
+        public string TEXT_PLAY = "Jouer";
 
         public MainWindow()
         {
@@ -40,12 +41,15 @@ namespace generateur
         {
             var dialog = new WinForms.FolderBrowserDialog();
             dialog.ShowDialog();
-            filePath.Text = dialog.SelectedPath + "\\" + nbrOfEntry.Text + "_mathador.json";
+            if (!dialog.SelectedPath.Equals(""))
+            {
+                filePath.Text = dialog.SelectedPath + "\\" + nbrOfEntry.Text + "_mathador.json";
+            }            
         }
 
         private void generateFileThread(int nb, string path)
         {
-            CustomThread customThread = new CustomThread(nb, path);
+            AsyncCreateFile customThread = new AsyncCreateFile(nb, path, generate, error);
             Thread t = new Thread(customThread.GenerateEntries);
             t.Start();
         }
@@ -63,14 +67,18 @@ namespace generateur
 
         private void generate_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(filePath.Text) && filePath.Text[1] == ':')
+            if (generate.Content.Equals(TEXT_PLAY))
+            {
+                var mathador = new mathador.MainWindow(filePath.Text);
+                this.Close();
+                mathador.ShowDialog();
+            }
+            else if (!string.IsNullOrEmpty(filePath.Text) && filePath.Text[1] == ':')
                 if (!string.IsNullOrWhiteSpace(nbrOfEntry.Text))
                 {
                     generateFileThread(Convert.ToInt32(nbrOfEntry.Text), filePath.Text);
                     error.Text = "";
-                    var mathador = new mathador.MainWindow(filePath.Text);
-                    this.Close();
-                    mathador.ShowDialog();
+                    generate.Content = "En cours....";
                 }
                 else
                     error.Text = "Veuillez saisir un nombre !";
@@ -109,50 +117,4 @@ namespace generateur
             return value;
         }
     }
-
-
-    public class CustomThread
-    {
-        private int nb;
-        private string path;
-
-        public CustomThread(int nb, string path)
-        {
-            this.nb = nb;
-            this.path = path;
-        }
-
-        public void GenerateEntries()
-        {
-            /*
-            - 3 nombres entre 1 et 12
-            - 2 nombres entre 1 et 20
-            - le nombre cible entre 1 et 100
-            */
-            Random rnd = new Random();
-
-
-            List<int> numbers = new List<int>();
-            List<string> lines = new List<string>();
-            for (int i = 0; i < nb; i++)
-            {
-                numbers.Add(1 + rnd.Next(12));
-                numbers.Add(1 + rnd.Next(12));
-                numbers.Add(1 + rnd.Next(12));
-                numbers.Add(1 + rnd.Next(20));
-                numbers.Add(1 + rnd.Next(20));
-                numbers.Add(1 + rnd.Next(100));
-                lines.Add(String.Join(", ", numbers.ToArray()));
-                numbers.Clear();
-                if (lines.Count > 5000)
-                {
-                    File.AppendAllLines(@"" + path, lines);
-                    lines.Clear();
-                }
-            }
-
-            File.AppendAllLines(@"" + path, lines);
-        }
-    }
-
 }
