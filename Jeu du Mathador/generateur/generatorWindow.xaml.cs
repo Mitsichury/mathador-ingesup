@@ -18,6 +18,7 @@ using Microsoft.Win32;
 using WinForms = System.Windows.Forms;
 using mathador;
 using System.Threading;
+using System.ComponentModel;
 
 namespace generateur
 {
@@ -28,7 +29,8 @@ namespace generateur
     {
         public string Path = "";
         public readonly int MAX_AUTHORIZED = 1000000;
-        public string TEXT_PLAY = "Jouer";
+        public string TEXT_PLAY = "Jouer";        
+        private AsyncCreateFile customThread;
 
         public MainWindow()
         {
@@ -49,9 +51,9 @@ namespace generateur
 
         private void generateFileThread(int nb, string path)
         {
-            AsyncCreateFile customThread = new AsyncCreateFile(nb, path, generate, error);
-            Thread t = new Thread(customThread.GenerateEntries);
-            t.Start();
+            customThread = new AsyncCreateFile(nb, path, generate, error);
+            Thread thread = new Thread(customThread.GenerateEntries);
+            thread.Start();          
         }
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
@@ -63,6 +65,16 @@ namespace generateur
                 ((TextBox)e.OriginalSource).Text = value.ToString();
                 e.Handled = true;
             }
+        }
+
+        private void onClosing(object sender, CancelEventArgs evt)
+        {
+            if(customThread != null)
+            {
+                customThread.stop();                              
+            }
+
+            Console.WriteLine("Bye");
         }
 
         private void generate_Click(object sender, RoutedEventArgs e)

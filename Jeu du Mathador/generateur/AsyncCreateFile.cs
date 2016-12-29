@@ -16,12 +16,20 @@ namespace generateur
         private Button button;
         private TextBlock progress;
 
+        private bool requestStop;
+
         public AsyncCreateFile(float nb, string path, Button button, TextBlock progress)
         {
             this.nb = nb;
             this.path = path;
             this.button = button;
             this.progress = progress;
+            requestStop = false;
+        }
+
+        public void stop()
+        {
+            requestStop = true;
         }
 
         public void GenerateEntries()
@@ -36,7 +44,7 @@ namespace generateur
 
             List<int> numbers = new List<int>();
             List<string> lines = new List<string>();
-            for (float i = 0; i < nb; i++)
+            for (float i = 0; i < nb && !requestStop; i++)
             {
                 numbers.Add(1 + rnd.Next(12));
                 numbers.Add(1 + rnd.Next(12));
@@ -55,10 +63,14 @@ namespace generateur
             }
 
             File.AppendAllLines(@"" + path, lines);
-            Application.Current.Dispatcher.Invoke(new Action(() => {
-                progress.Text = "100%";
-                button.Content = "Jouer";
-            }));
+            if (!requestStop)
+            {
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    progress.Text = "100%";
+                    button.Content = "Jouer";
+                }));
+            }
         }
     }
 }
