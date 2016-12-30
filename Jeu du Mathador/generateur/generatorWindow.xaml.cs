@@ -31,6 +31,7 @@ namespace generateur
         public readonly int MAX_AUTHORIZED = 1000000;
         public string TEXT_PLAY = "Jouer";        
         private AsyncCreateFile customThread;
+        Regex regex = new Regex("[0-9]");
 
         public MainWindow()
         {
@@ -51,20 +52,15 @@ namespace generateur
 
         private void generateFileThread(int nb, string path)
         {
+            generate.IsEnabled = false;
             customThread = new AsyncCreateFile(nb, path, generate, error);
             Thread thread = new Thread(customThread.GenerateEntries);
             thread.Start();          
         }
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
-        {
-            Regex regex = new Regex("[^0-9]+");
-            if (!regex.IsMatch(e.Text))
-            {
-                int value = formatNbEntry(((TextBox)e.OriginalSource).Text + e.Text);                
-                ((TextBox)e.OriginalSource).Text = value.ToString();
-                e.Handled = true;
-            }
+        {            
+            e.Handled = !regex.IsMatch(e.Text);            
         }
 
         private void onClosing(object sender, CancelEventArgs evt)
@@ -105,8 +101,9 @@ namespace generateur
 
         private void NbrOfEntry_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            string textChanged = ((TextBox)(e.OriginalSource)).Text;
+            string textChanged = ((TextBox)(e.OriginalSource)).Text;            
             int nbrEntry = (string.IsNullOrWhiteSpace(textChanged)) ? 0 : formatNbEntry(textChanged);
+            ((TextBox)e.OriginalSource).Text = nbrEntry.ToString();
             filePath.Text = Path + "\\" + nbrEntry + "_mathador.json";
         }
 

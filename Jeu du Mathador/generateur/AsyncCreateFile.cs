@@ -59,7 +59,10 @@ namespace generateur
                     File.AppendAllLines(@"" + path, lines);
                     lines.Clear();
                 }
-                Application.Current.Dispatcher.Invoke(new Action(() => { progress.Text = (i / nb * 100) + "%"; }));
+                if(lines.Count % 100 == 0)
+                {
+                    Application.Current.Dispatcher.Invoke(new Action(() => { progress.Text = (i / nb * 100) + "%"; }));
+                }
             }
 
             File.AppendAllLines(@"" + path, lines);
@@ -67,6 +70,7 @@ namespace generateur
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
+                    button.IsEnabled = true;
                     progress.Text = "100%";
                     button.Content = "Jouer";
                 }));
