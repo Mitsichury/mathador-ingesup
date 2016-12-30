@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using mathador;
 
 namespace mathador
 {
@@ -26,11 +27,10 @@ namespace mathador
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private string filePath;
+        private readonly string _filePath;
         private Button firstSelectedValue;
         private Button lastSelectedValue;
         private Button SelectedOperator;
-
 
         public MainWindow()
         {
@@ -40,29 +40,29 @@ namespace mathador
         public MainWindow(string FilePath)
         {
             InitializeComponent();
-            filePath = FilePath;
+            _filePath = FilePath;
             loadMathador();
         }
 
         #region XAMLVariable
-        private string _value1;
-        public string Value1
+        private string _valueShown1;
+        public string ValueShown1
         {
-            get { return _value1; }
+            get { return _valueShown1; }
             set
             {
-                _value1 = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("value1"));
+                _valueShown1 = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("valueshown1"));
             }
         }
-        private string _value2;
-        public string Value2
+        private string _valueShown2;
+        public string ValueShown2
         {
-            get { return _value2;  }
+            get { return _valueShown2;  }
             set
             {
-                _value2 = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("value2"));
+                _valueShown2 = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("valueshown2"));
             }
         }
         private string _operator;
@@ -95,44 +95,121 @@ namespace mathador
                 PropertyChanged(this, new PropertyChangedEventArgs("historique"));
             }
         }
+        private ObservableCollection<mathadorItem> _mathadorCollection = new ObservableCollection<mathadorItem>();
+        public ObservableCollection<mathadorItem> MathadorCollection
+        {
+            get { return _mathadorCollection; }
+            set
+            {
+                _mathadorCollection = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("MathadorCollection"));
+            }
+        }
+        private string _value1;
+        public string Value1
+        {
+            get { return _value1; }
+            set
+            {
+                _value1 = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("value1"));
+            }
+        }
+        private string _value2;
+        public string Value2
+        {
+            get { return _value2; }
+            set
+            {
+                _value2 = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("value2"));
+            }
+        }
+        private string _value3;
+        public string Value3
+        {
+            get { return _value3; }
+            set
+            {
+                _value3 = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("value3"));
+            }
+        }
+        private string _value4;
+        public string Value4
+        {
+            get { return _value4; }
+            set
+            {
+                _value4 = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("value4"));
+            }
+        }
+        private string _value5;
+        public string Value5
+        {
+            get { return _value5; }
+            set
+            {
+                _value5 = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("value5"));
+            }
+        }
+        private string _valueToFind;
+        public string ValueToFind
+        {
+            get { return _valueToFind; }
+            set
+            {
+                _valueToFind = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("valueToFind"));
+            }
+        }
         #endregion
-
+        /// <summary>
+        /// Fonction recevant l'event click des boutons contenants les valeurs
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ValueButton_OnClick(object sender, RoutedEventArgs e)
         {
             var button = e.OriginalSource as Button;
             if (button != firstSelectedValue && button != lastSelectedValue)
             {
-                if (string.IsNullOrWhiteSpace(Value1))
+                if (string.IsNullOrWhiteSpace(ValueShown1))
                 {
-                    Value1 = ((TextBlock) button.Content).Text;
+                    ValueShown1 = ((TextBlock) button.Content).Text;
                     firstSelectedValue = button;
-                    firstSelectedValue.Background = Brushes.SaddleBrown;
                 }
-                else if (string.IsNullOrWhiteSpace(Value2))
+                else if (string.IsNullOrWhiteSpace(ValueShown2))
                 {
-                    Value2 = ((TextBlock) button.Content).Text;
+                    ValueShown2 = ((TextBlock) button.Content).Text;
                     lastSelectedValue = button;
-                    lastSelectedValue.Background = Brushes.SaddleBrown;
                 }
+                button.Background = Brushes.SaddleBrown;
                 Calcul();
             }
             else
             {
                 if (button == firstSelectedValue)
                 {
-                    Value1 = "";
-                    firstSelectedValue.Background = Brushes.Aqua;
+                    ValueShown1 = "";
                     firstSelectedValue = null;
                 }
                 else
                 {
-                    Value2 = "";
-                    lastSelectedValue.Background = Brushes.Aqua;
+                    ValueShown2 = "";
                     lastSelectedValue = null;
                 }
+                button.Background = Brushes.Aqua;
             }
         }
 
+        /// <summary>
+        /// Fonctions recevant l'event click des boutons contenants les opérateurs
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OperatorButton_OnClick(object sender, RoutedEventArgs e)
         {
             var button = e.OriginalSource as Button;
@@ -153,23 +230,29 @@ namespace mathador
             Calcul();
         }
 
+        /// <summary>
+        /// Fonction au startup
+        /// Charge le fichier et stock les mathadors
+        /// </summary>
         private void loadMathador()
         {
-            string[] mathadorStrings = File.ReadAllLines(filePath);
+            string[] mathadorStrings = File.ReadAllLines(_filePath);
             foreach (var mathadorString in mathadorStrings)
             {
-                Console.WriteLine(mathadorString);
+                //var mathadorList = Array.ConvertAll(mathadorString.Split(','), s => int.Parse(s)); // Finalement pas de conversion en int car il est plus simple d'utiliser des string de partout
+                var mathadorList = mathadorString.Split(',');
+                MathadorCollection.Add(new mathadorItem(mathadorList));
             }
         }
 
         private void Calcul()
         {
-            if (!string.IsNullOrWhiteSpace(Value1) && !string.IsNullOrWhiteSpace(Value2) && !string.IsNullOrWhiteSpace(Operator))
+            if (!string.IsNullOrWhiteSpace(ValueShown1) && !string.IsNullOrWhiteSpace(ValueShown2) && !string.IsNullOrWhiteSpace(Operator))
             {
                 ErrorMessage = "";
                 int result = 0;
-                int value1 = int.Parse(Value1);
-                int value2 = int.Parse(Value2);
+                int value1 = int.Parse(ValueShown1);
+                int value2 = int.Parse(ValueShown2);
                 switch (Operator)
                 {
                     case "+":
@@ -187,7 +270,7 @@ namespace mathador
                 }
                 if (result >= 0)
                 {
-                    Historique.Add(Value1 + " " + Operator + " " + Value2 + " = " + result);
+                    Historique.Add(ValueShown1 + " " + Operator + " " + ValueShown2 + " = " + result);
                     firstSelectedValue.IsEnabled = false;
                     ((TextBlock)firstSelectedValue.Content).Text = " ";
                     ((TextBlock)lastSelectedValue.Content).Text = result.ToString();
@@ -202,10 +285,30 @@ namespace mathador
                 firstSelectedValue = null;
                 lastSelectedValue = null;
                 SelectedOperator = null;
-                Value1 = "";
-                Value2 = "";
+                ValueShown1 = "";
+                ValueShown2 = "";
                 Operator = "";
             }
+        }
+
+        private void LaunchGameMenu_OnClick(object sender, RoutedEventArgs e)
+        {
+            loadMathadorsValue(MathadorCollection[0]);
+        }
+
+        private void loadMathadorsValue(mathadorItem item)
+        {
+            Value1 = item.Value1;
+            Value2 = item.Value2;
+            Value3 = item.Value3;
+            Value4 = item.Value4;
+            Value5 = item.Value5;
+            ValueToFind = item.Value2;
+        }
+
+        private void CloseMenu_OnClick(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

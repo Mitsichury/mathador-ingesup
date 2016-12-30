@@ -6,19 +6,29 @@ using System.Threading.Tasks;
 
 namespace mathador
 {
-    class mathadorItems
+    public class mathadorItem
     {
-        private int Value1;
-        private int Value2;
-        private int Value3;
-        private int Value4;
-        private int Value5;
+        public string Value1;
+        public string Value2;
+        public string Value3;
+        public string Value4;
+        public string Value5;
 
-        private int ValueToFind;
+        public string ValueToFind;
 
-        private List<mathadorOper> MathadorOperList = new List<mathadorOper>();
+        public List<mathadorOper> MathadorOperList = new List<mathadorOper>();
 
-        public mathadorItems(int value1, int value2, int value3, int value4, int value5, int valueToFind)
+        #region constructeur
+        /// <summary>
+        /// Constructeur de MathadorItems prenant un string par valeur en parametre
+        /// </summary>
+        /// <param name="value1"></param>
+        /// <param name="value2"></param>
+        /// <param name="value3"></param>
+        /// <param name="value4"></param>
+        /// <param name="value5"></param>
+        /// <param name="valueToFind"></param>
+        public mathadorItem(string value1, string value2, string value3, string value4, string value5, string valueToFind)
         {
             Value1 = value1;
             Value2 = value2;
@@ -27,16 +37,31 @@ namespace mathador
             Value5 = value5;
             ValueToFind = valueToFind;
         }
+
+        /// <summary>
+        /// Constructeur de MathadorItems prenant un tableau string[] en parametre
+        /// </summary>
+        /// <param name="values"></param>
+        public mathadorItem(string[] values)
+        {
+            Value1 = values[0];
+            Value2 = values[1];
+            Value3 = values[2];
+            Value4 = values[3];
+            Value5 = values[4];
+            ValueToFind = values[5];
+        }
+        #endregion
     }
 
-    class mathadorOper
+    public class mathadorOper
     {
-        private int Value1;
-        private int Value2;
+        public string Value1;
+        public string Value2;
 
-        private string Operator;
+        public string Operator;
 
-        private int Result;
+        public string Result;
 
         /// <summary>
         /// Grâce à ca, on a juste à utiliser la variable et l'opération se fait toute seul
@@ -47,7 +72,7 @@ namespace mathador
         /// </example>
         //private Func<int, int, int> Operator;
 
-        public mathadorOper(int value1, int value2, string _operator)
+        public mathadorOper(string value1, string value2, string _operator)
         {
             Value1 = value1;
             Value2 = value2;
