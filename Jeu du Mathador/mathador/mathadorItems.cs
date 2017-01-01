@@ -8,13 +8,13 @@ namespace mathador
 {
     public class mathadorItem
     {
-        public string Value1;
-        public string Value2;
-        public string Value3;
-        public string Value4;
-        public string Value5;
+        public string Value1 { get; set; }
+        public string Value2 { get; set; }
+        public string Value3 { get; set; }
+        public string Value4 { get; set; }
+        public string Value5 { get; set; }
 
-        public string ValueToFind;
+        public string ValueToFind { get; set; }
 
         public List<mathadorOper> MathadorOperList = new List<mathadorOper>();
 
@@ -30,12 +30,12 @@ namespace mathador
         /// <param name="valueToFind"></param>
         public mathadorItem(string value1, string value2, string value3, string value4, string value5, string valueToFind)
         {
-            Value1 = value1;
-            Value2 = value2;
-            Value3 = value3;
-            Value4 = value4;
-            Value5 = value5;
-            ValueToFind = valueToFind;
+            Value1 = value1.Trim();
+            Value2 = value2.Trim();
+            Value3 = value3.Trim();
+            Value4 = value4.Trim();
+            Value5 = value5.Trim();
+            ValueToFind = valueToFind.Trim();
         }
 
         /// <summary>
@@ -44,12 +44,12 @@ namespace mathador
         /// <param name="values"></param>
         public mathadorItem(string[] values)
         {
-            Value1 = values[0];
-            Value2 = values[1];
-            Value3 = values[2];
-            Value4 = values[3];
-            Value5 = values[4];
-            ValueToFind = values[5];
+            Value1 = values[0].Trim();
+            Value2 = values[1].Trim();
+            Value3 = values[2].Trim();
+            Value4 = values[3].Trim();
+            Value5 = values[4].Trim();
+            ValueToFind = values[5].Trim();
         }
         #endregion
     }

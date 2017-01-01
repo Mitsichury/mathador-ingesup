@@ -28,19 +28,19 @@ namespace mathador
         public event PropertyChangedEventHandler PropertyChanged;
 
         private readonly string _filePath;
-        private Button firstSelectedValue;
-        private Button lastSelectedValue;
-        private Button SelectedOperator;
+        private Button _firstSelectedValue;
+        private Button _lastSelectedValue;
+        private Button _selectedOperator;
 
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        public MainWindow(string FilePath)
+        public MainWindow(string filePath)
         {
             InitializeComponent();
-            _filePath = FilePath;
+            _filePath = filePath;
             loadMathador();
         }
 
@@ -166,6 +166,7 @@ namespace mathador
             }
         }
         #endregion
+
         /// <summary>
         /// Fonction recevant l'event click des boutons contenants les valeurs
         /// </summary>
@@ -174,32 +175,32 @@ namespace mathador
         private void ValueButton_OnClick(object sender, RoutedEventArgs e)
         {
             var button = e.OriginalSource as Button;
-            if (button != firstSelectedValue && button != lastSelectedValue)
+            if (button != _firstSelectedValue && button != _lastSelectedValue)
             {
                 if (string.IsNullOrWhiteSpace(ValueShown1))
                 {
                     ValueShown1 = ((TextBlock) button.Content).Text;
-                    firstSelectedValue = button;
+                    _firstSelectedValue = button;
                 }
                 else if (string.IsNullOrWhiteSpace(ValueShown2))
                 {
                     ValueShown2 = ((TextBlock) button.Content).Text;
-                    lastSelectedValue = button;
+                    _lastSelectedValue = button;
                 }
                 button.Background = Brushes.SaddleBrown;
                 Calcul();
             }
             else
             {
-                if (button == firstSelectedValue)
+                if (button == _firstSelectedValue)
                 {
                     ValueShown1 = "";
-                    firstSelectedValue = null;
+                    _firstSelectedValue = null;
                 }
                 else
                 {
                     ValueShown2 = "";
-                    lastSelectedValue = null;
+                    _lastSelectedValue = null;
                 }
                 button.Background = Brushes.Aqua;
             }
@@ -213,18 +214,18 @@ namespace mathador
         private void OperatorButton_OnClick(object sender, RoutedEventArgs e)
         {
             var button = e.OriginalSource as Button;
-            if (button != SelectedOperator)
+            if (button != _selectedOperator)
             {
-                if (SelectedOperator != null)
-                    SelectedOperator.Background = Brushes.LightGray;
-                SelectedOperator = button;
+                if (_selectedOperator != null)
+                    _selectedOperator.Background = Brushes.LightGray;
+                _selectedOperator = button;
                 Operator = ((TextBlock)button.Content).Text;
-                SelectedOperator.Background = Brushes.Brown;
+                _selectedOperator.Background = Brushes.Brown;
             }
             else
             {
-                SelectedOperator.Background = Brushes.LightGray;
-                SelectedOperator = null;
+                _selectedOperator.Background = Brushes.LightGray;
+                _selectedOperator = null;
                 Operator = "";
             }
             Calcul();
@@ -271,20 +272,20 @@ namespace mathador
                 if (result >= 0)
                 {
                     Historique.Add(ValueShown1 + " " + Operator + " " + ValueShown2 + " = " + result);
-                    firstSelectedValue.IsEnabled = false;
-                    ((TextBlock)firstSelectedValue.Content).Text = " ";
-                    ((TextBlock)lastSelectedValue.Content).Text = result.ToString();
+                    _firstSelectedValue.IsEnabled = false;
+                    ((TextBlock)_firstSelectedValue.Content).Text = " ";
+                    ((TextBlock)_lastSelectedValue.Content).Text = result.ToString();
                 }
                 else
                 {
-                    firstSelectedValue.Background = Brushes.Aqua;
+                    _firstSelectedValue.Background = Brushes.Aqua;
                     ErrorMessage = "Résultat inférieur à 0 impossible !";
                 }
-                lastSelectedValue.Background = Brushes.Aqua;
-                SelectedOperator.Background = Brushes.LightGray;
-                firstSelectedValue = null;
-                lastSelectedValue = null;
-                SelectedOperator = null;
+                _lastSelectedValue.Background = Brushes.Aqua;
+                _selectedOperator.Background = Brushes.LightGray;
+                _firstSelectedValue = null;
+                _lastSelectedValue = null;
+                _selectedOperator = null;
                 ValueShown1 = "";
                 ValueShown2 = "";
                 Operator = "";
@@ -309,6 +310,12 @@ namespace mathador
         private void CloseMenu_OnClick(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void ShowMathadorMenu_OnClick(object sender, RoutedEventArgs e)
+        {
+            MathadorList mathadorWindow = new MathadorList(MathadorCollection);
+            mathadorWindow.Show();
         }
     }
 }
