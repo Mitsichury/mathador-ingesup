@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "generateur", "generateur\ge
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mathador", "mathador\mathador.csproj", "{FFFBBA70-CD04-4D99-9005-231442063138}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolverTest", "SolverTest\SolverTest.csproj", "{23856AC4-AB3A-4F67-8136-749EEE3CE712}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solver", "Solver\Solver.csproj", "{4E6AA840-F868-4A59-8BDE-8D6A70C38C67}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{FFFBBA70-CD04-4D99-9005-231442063138}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFFBBA70-CD04-4D99-9005-231442063138}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFFBBA70-CD04-4D99-9005-231442063138}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23856AC4-AB3A-4F67-8136-749EEE3CE712}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23856AC4-AB3A-4F67-8136-749EEE3CE712}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23856AC4-AB3A-4F67-8136-749EEE3CE712}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23856AC4-AB3A-4F67-8136-749EEE3CE712}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E6AA840-F868-4A59-8BDE-8D6A70C38C67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E6AA840-F868-4A59-8BDE-8D6A70C38C67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E6AA840-F868-4A59-8BDE-8D6A70C38C67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E6AA840-F868-4A59-8BDE-8D6A70C38C67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
