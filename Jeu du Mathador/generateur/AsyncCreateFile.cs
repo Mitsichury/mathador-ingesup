@@ -72,7 +72,7 @@ namespace generateur
                 {
                     button.IsEnabled = true;
                     progress.Text = "100%";
-                    button.Content = "Jouer";
+                    button.Content = "Générer";
                 }));
             }
         }

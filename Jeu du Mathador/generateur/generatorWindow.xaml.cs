@@ -16,24 +16,22 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using WinForms = System.Windows.Forms;
-using mathador;
 using System.Threading;
 using System.ComponentModel;
 
 namespace generateur
 {
     /// <summary>
-    /// Logique d'interaction pour MainWindow.xaml
+    /// Logique d'interaction pour GenerateurWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class GenerateurWindow : Window
     {
         public string Path = "";
-        public readonly int MAX_AUTHORIZED = 1000000;
-        public string TEXT_PLAY = "Jouer";        
+        public readonly int MAX_AUTHORIZED = 1000000;             
         private AsyncCreateFile customThread;
         Regex regex = new Regex("[0-9]");
 
-        public MainWindow()
+        public GenerateurWindow()
         {
             InitializeComponent();
             Path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -68,20 +66,12 @@ namespace generateur
             if(customThread != null)
             {
                 customThread.stop();                              
-            }
-
-            Console.WriteLine("Bye");
+            }            
         }
 
         private void generate_Click(object sender, RoutedEventArgs e)
         {
-            if (generate.Content.Equals(TEXT_PLAY))
-            {
-                var mathador = new mathador.MainWindow(filePath.Text);
-                this.Close();
-                mathador.ShowDialog();
-            }
-            else if (!string.IsNullOrEmpty(filePath.Text) && filePath.Text[1] == ':')
+           if (!string.IsNullOrEmpty(filePath.Text) && filePath.Text[1] == ':')
                 if (!string.IsNullOrWhiteSpace(nbrOfEntry.Text))
                 {
                     generateFileThread(Convert.ToInt32(nbrOfEntry.Text), filePath.Text);
