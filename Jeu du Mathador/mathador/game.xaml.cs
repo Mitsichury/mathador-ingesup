@@ -18,6 +18,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Button = System.Windows.Controls.Button;
 using UserControl = System.Windows.Controls.UserControl;
+using System.Timers;
+using Timer = System.Timers.Timer;
 
 namespace mathador
 {
@@ -27,8 +29,9 @@ namespace mathador
     public partial class game : UserControl, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-
+        private int remainingTime = 180;
         private string _filePath;
+        private static Timer theFinalCountDown = new Timer(1000);
         private Button _firstSelectedValue;
         private Button _lastSelectedValue;
         private Button _selectedOperator;
@@ -38,6 +41,28 @@ namespace mathador
         public game()
         {
             InitializeComponent();
+            theFinalCountDown.Elapsed += OnTimedEvent;            
+        }
+
+        private void OnTimedEvent(object sender, ElapsedEventArgs e)
+        {
+            remainingTime--;
+            Timer = new TimeSpan(0, remainingTime/60, remainingTime%60).ToString(@"mm\:ss");
+            if (remainingTime == 0)
+            {
+                theFinalCountDown.Stop();
+            }
+        }
+
+        private string _timer;
+        public string Timer
+        {
+            get { return _timer; }
+            set
+            {
+                _timer = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("timer"));
+            }         
         }
 
         #region XAMLVariable
@@ -296,6 +321,8 @@ namespace mathador
                 importFile();
             }
             loadMathadorsValue(MathadorCollection[rdmIndexMathador.Next(0, MathadorCollection.Count - 1)]);
+            remainingTime = 180;
+            theFinalCountDown.Start();
         }
 
         private void loadMathadorsValue(mathadorItem item)
