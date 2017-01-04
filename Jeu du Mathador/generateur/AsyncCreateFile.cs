@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using mathador;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace generateur
 {
@@ -35,7 +36,7 @@ namespace generateur
         }
 
         public void GenerateEntries()
-        {            
+        {
             /*
             - 3 nombres entre 1 et 12
             - 2 nombres entre 1 et 20
@@ -43,25 +44,29 @@ namespace generateur
             */
             Random rnd = new Random();
 
-            List<mathadorItem> items = new List<mathadorItem>();            
-            for (float i = 0; i < nb && !requestStop; i++)
+            JsonSerializer serializer = new JsonSerializer();
+
+            using (StreamWriter file = File.CreateText(@"" + path))
+            using (JsonTextWriter writer = new JsonTextWriter(file))
             {
-                items.Add(new mathadorItem((1 + rnd.Next(12)).ToString(), (1 + rnd.Next(12)).ToString(), (1 + rnd.Next(12)).ToString(), (1 + rnd.Next(20)).ToString(), (1 + rnd.Next(20)).ToString(), (1 + rnd.Next(100)).ToString()));
-                               
-              /*  if (items.Count > 5000)
+                writer.WriteStartArray();
+                for (float i = 0; i < nb && !requestStop; i++)
                 {
-                    File.AppendAllLines(@"" + path, items);
-                    items.Clear();
-                }*/
-                if(items.Count % 100 == 0)
-                {
-                    Application.Current.Dispatcher.Invoke(new Action(() => { progress.Text = (i / nb * 100)/2 + "%"; }));
+                    mathadorItem item = new mathadorItem((1 + rnd.Next(12)).ToString(), (1 + rnd.Next(12)).ToString(), (1 + rnd.Next(12)).ToString(), (1 + rnd.Next(20)).ToString(), (1 + rnd.Next(20)).ToString(), (1 + rnd.Next(100)).ToString());
+
+                    JObject obj = JObject.FromObject(item, serializer);
+                    obj.WriteTo(writer);
+                    writer.Flush();
+                    if (i % 100 == 0)
+                    {
+                        Application.Current.Dispatcher.Invoke(
+                            new Action(() => { progress.Text = (i / nb * 100) + "%"; }));
+                    }
                 }
+
+                writer.WriteEndArray();
             }
 
-            /*File.AppendAllLines(@"" + path, items);*/
-            System.IO.File.WriteAllText(@"" + path, JsonConvert.SerializeObject(items));
-            items.Clear();
             if (!requestStop)
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
