@@ -1,12 +1,14 @@
 ﻿
 
 using System;
+using System.Collections.Generic;
 using System.Data;
-using Mono.Data.Sqlite;
+using MathadorLibrary;
+using System.Data.SQLite;
 
 namespace MathadorDatabase
 {
-    class DatabaseHelper
+    public class DatabaseHelper
     {
         public static readonly string DatabaseFileName = "mathador.db";
         public static readonly string TableQuery = "CREATE TABLE IF NOT EXISTS Parties (" +                                                    
@@ -21,14 +23,23 @@ namespace MathadorDatabase
         public void OpenConnexion()
         {
             string connectionString = "URI=file:"+DatabaseFileName;
-            _databaseConnection = new SqliteConnection(connectionString);
+            _databaseConnection = new SQLiteConnection(connectionString);
             _databaseConnection.Open();
 
             IDbCommand createDatabaseIfNeedeed = _databaseConnection.CreateCommand();            
             createDatabaseIfNeedeed.CommandText = TableQuery;
             createDatabaseIfNeedeed.ExecuteNonQuery();
             createDatabaseIfNeedeed.Dispose();
+        }
 
+        public void Flush()
+        {
+            OpenConnexion();
+            IDbCommand createDatabaseIfNeedeed = _databaseConnection.CreateCommand();
+            createDatabaseIfNeedeed.CommandText = "DELETE FROM Parties";
+            createDatabaseIfNeedeed.ExecuteNonQuery();
+            createDatabaseIfNeedeed.Dispose();
+            CloseConnexion();
         }
 
         public void CloseConnexion()
@@ -36,30 +47,31 @@ namespace MathadorDatabase
             _databaseConnection.Close();
         }
 
-        public int Insert(string nomJoueur, int points, int tempsMoyen, int nombreMatahdor, int pointsMoyen)
+        public int Insert(DatabaseEntry databaseEntry)
         {
             OpenConnexion();
             IDbCommand cmd = _databaseConnection.CreateCommand();            
             cmd.Prepare();
-
-            
+          
             const string sql =
                "INSERT INTO PARTIES(nomJoueur, points, tempsMoyen, nombreMathador, pointsMoyen) " +
-               "VALUES(?,?,?,?,?)";
+               "VALUES(@nomJoueur, @points, @tempsMoyen, @nombreMathador, @pointsMoyen)";
             cmd.CommandText = sql;
-            cmd.Parameters.Add(nomJoueur);
-            cmd.Parameters.Add(points);
-            cmd.Parameters.Add(tempsMoyen);
-            cmd.Parameters.Add(nombreMatahdor);
-            cmd.Parameters.Add(pointsMoyen);
+            cmd.Parameters.Add(new SQLiteParameter("@nomJoueur", databaseEntry.NomJoueur));
+            cmd.Parameters.Add(new SQLiteParameter("@points", databaseEntry.Points));
+            cmd.Parameters.Add(new SQLiteParameter("@tempsMoyen", databaseEntry.TempsMoyen));
+            cmd.Parameters.Add(new SQLiteParameter("@nombreMathador", databaseEntry.NombreMatahdor));
+            cmd.Parameters.Add(new SQLiteParameter("@pointsMoyen", databaseEntry.PointsMoyen));
             int result = cmd.ExecuteNonQuery();
             cmd.Dispose();
             CloseConnexion();
             return result;
         }
        
-        public void SelectAll()
+        public List<DatabaseEntry> SelectAll()
         {
+            List<DatabaseEntry> databaseEntries = new List<DatabaseEntry>();
+            
             OpenConnexion();
             IDbCommand cmd = _databaseConnection.CreateCommand();         
             const string sql =
@@ -69,14 +81,20 @@ namespace MathadorDatabase
             IDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                string firstName = reader.GetString(0);
-                string lastName = reader.GetString(1);
-                Console.WriteLine("Name: {0} {1}",
-                    firstName, lastName);
+                databaseEntries.Add(
+                    new DatabaseEntry(
+                        reader.GetString(0),
+                        reader.GetInt32(1),
+                        reader.GetInt32(2),
+                        reader.GetInt32(3),
+                        reader.GetInt32(4)
+                    )
+                );
             }
             reader.Dispose();
             cmd.Dispose();
             CloseConnexion();
+            return databaseEntries;
         }
     }
 }
