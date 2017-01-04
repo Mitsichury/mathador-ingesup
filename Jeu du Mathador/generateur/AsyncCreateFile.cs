@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using mathador;
+using Newtonsoft.Json;
 
 namespace generateur
 {
@@ -41,31 +43,25 @@ namespace generateur
             */
             Random rnd = new Random();
 
-
-            List<int> numbers = new List<int>();
-            List<string> lines = new List<string>();
+            List<mathadorItem> items = new List<mathadorItem>();            
             for (float i = 0; i < nb && !requestStop; i++)
             {
-                numbers.Add(1 + rnd.Next(12));
-                numbers.Add(1 + rnd.Next(12));
-                numbers.Add(1 + rnd.Next(12));
-                numbers.Add(1 + rnd.Next(20));
-                numbers.Add(1 + rnd.Next(20));
-                numbers.Add(1 + rnd.Next(100));
-                lines.Add(String.Join(", ", numbers.ToArray()));
-                numbers.Clear();
-                if (lines.Count > 5000)
+                items.Add(new mathadorItem((1 + rnd.Next(12)).ToString(), (1 + rnd.Next(12)).ToString(), (1 + rnd.Next(12)).ToString(), (1 + rnd.Next(20)).ToString(), (1 + rnd.Next(20)).ToString(), (1 + rnd.Next(100)).ToString()));
+                               
+              /*  if (items.Count > 5000)
                 {
-                    File.AppendAllLines(@"" + path, lines);
-                    lines.Clear();
-                }
-                if(lines.Count % 100 == 0)
+                    File.AppendAllLines(@"" + path, items);
+                    items.Clear();
+                }*/
+                if(items.Count % 100 == 0)
                 {
-                    Application.Current.Dispatcher.Invoke(new Action(() => { progress.Text = (i / nb * 100) + "%"; }));
+                    Application.Current.Dispatcher.Invoke(new Action(() => { progress.Text = (i / nb * 100)/2 + "%"; }));
                 }
             }
 
-            File.AppendAllLines(@"" + path, lines);
+            /*File.AppendAllLines(@"" + path, items);*/
+            System.IO.File.WriteAllText(@"" + path, JsonConvert.SerializeObject(items));
+            items.Clear();
             if (!requestStop)
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>

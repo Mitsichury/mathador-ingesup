@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MathadorLibrary;
 
 namespace mathador
 {
@@ -52,31 +53,16 @@ namespace mathador
             ValueToFind = values[5].Trim();
         }
         #endregion
-    }
 
-    public class mathadorOper
-    {
-        public string Value1;
-        public string Value2;
-
-        public string Operator;
-
-        public string Result;
-
-        /// <summary>
-        /// Grâce à ca, on a juste à utiliser la variable et l'opération se fait toute seul
-        /// En faite c'est con mais on n'en a pas besoin on veut juste stocker donc shit....
-        /// </summary>
-        /// <example>
-        /// Func<int, int, int> plus = (a, b) => a + b;
-        /// </example>
-        //private Func<int, int, int> Operator;
-
-        public mathadorOper(string value1, string value2, string _operator)
+        public List<string> valuesToList()
         {
-            Value1 = value1;
-            Value2 = value2;
-            Operator = _operator;
+            List<string> list = new List<string>();
+            list.Add(Value1);
+            list.Add(Value2);
+            list.Add(Value3);
+            list.Add(Value4);
+            list.Add(Value5);
+            return list;
         }
     }
 }

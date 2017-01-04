@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "generateur", "generateur\generateur.csproj", "{373AACD3-0719-4416-B5B7-E198B668D0A0}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolverTest", "SolverTest\SolverTest.csproj", "{23856AC4-AB3A-4F67-8136-749EEE3CE712}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solver", "Solver\Solver.csproj", "{4E6AA840-F868-4A59-8BDE-8D6A70C38C67}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathadorLibrary", "MathadorLibrary\MathadorLibrary.csproj", "{0B247FFD-FA08-42AC-945F-2CDCF025666D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{4E6AA840-F868-4A59-8BDE-8D6A70C38C67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E6AA840-F868-4A59-8BDE-8D6A70C38C67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E6AA840-F868-4A59-8BDE-8D6A70C38C67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B247FFD-FA08-42AC-945F-2CDCF025666D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B247FFD-FA08-42AC-945F-2CDCF025666D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B247FFD-FA08-42AC-945F-2CDCF025666D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B247FFD-FA08-42AC-945F-2CDCF025666D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
