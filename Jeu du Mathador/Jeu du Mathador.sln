@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solver", "Solver\Solver.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathadorLibrary", "MathadorLibrary\MathadorLibrary.csproj", "{0B247FFD-FA08-42AC-945F-2CDCF025666D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathadorDatabase", "MathadorDatabase\MathadorDatabase.csproj", "{4EF837D2-14F3-4ED8-BDAF-9F3A4E7AF371}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{0B247FFD-FA08-42AC-945F-2CDCF025666D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B247FFD-FA08-42AC-945F-2CDCF025666D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B247FFD-FA08-42AC-945F-2CDCF025666D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EF837D2-14F3-4ED8-BDAF-9F3A4E7AF371}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EF837D2-14F3-4ED8-BDAF-9F3A4E7AF371}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EF837D2-14F3-4ED8-BDAF-9F3A4E7AF371}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EF837D2-14F3-4ED8-BDAF-9F3A4E7AF371}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
