@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,8 @@ using System.Windows.Shapes;
 using Button = System.Windows.Controls.Button;
 using UserControl = System.Windows.Controls.UserControl;
 using System.Timers;
+using System.Windows.Forms.VisualStyles;
+using Newtonsoft.Json;
 using Timer = System.Timers.Timer;
 
 namespace mathador
@@ -52,17 +55,6 @@ namespace mathador
             {
                 theFinalCountDown.Stop();
             }
-        }
-
-        private string _timer;
-        public string Timer
-        {
-            get { return _timer; }
-            set
-            {
-                _timer = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("timer"));
-            }         
         }
 
         #region XAMLVariable
@@ -186,6 +178,28 @@ namespace mathador
                 PropertyChanged(this, new PropertyChangedEventArgs("valueToFind"));
             }
         }
+
+        private string _timer = "00:00";
+        public string Timer
+        {
+            get { return _timer; }
+            set
+            {
+                _timer = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("timer"));
+            }
+        }
+
+        private string _points = "0 pts";
+        public string Points
+        {
+            get { return _points; }
+            set
+            {
+                _points = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("points"));
+            }
+        }
         #endregion
 
         /// <summary>
@@ -258,15 +272,26 @@ namespace mathador
         /// </summary>
         private void loadMathador()
         {
+            List<mathadorItem> items = new List<mathadorItem>();
             if (!string.IsNullOrWhiteSpace(_filePath))
             {
-                string[] mathadorStrings = File.ReadAllLines(_filePath);
-                foreach (var mathadorString in mathadorStrings)
+                //string[] mathadorStrings = File.ReadAllLines(_filePath);
+
+                using (StreamReader r = new StreamReader(_filePath))
+                {
+                    string json = r.ReadToEnd();
+                    items = JsonConvert.DeserializeObject<List<mathadorItem>>(json);
+                }
+                foreach (var item in items)
+                {
+                    MathadorCollection.Add(item);
+                }
+                /*foreach (var mathadorString in mathadorStrings)
                 {
                     //var mathadorList = Array.ConvertAll(mathadorString.Split(','), s => int.Parse(s)); // Finalement pas de conversion en int car il est plus simple d'utiliser des string de partout
                     var mathadorList = mathadorString.Split(',');
                     MathadorCollection.Add(new mathadorItem(mathadorList));
-                }
+                }*/
             }
         }
 

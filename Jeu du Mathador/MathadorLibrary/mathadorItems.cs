@@ -39,6 +39,10 @@ namespace mathador
             ValueToFind = valueToFind.Trim();
         }
 
+        public mathadorItem()
+        {
+        }
+
         /// <summary>
         /// Constructeur de MathadorItems prenant un tableau string[] en parametre
         /// </summary>
