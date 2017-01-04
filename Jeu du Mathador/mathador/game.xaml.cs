@@ -258,12 +258,15 @@ namespace mathador
         /// </summary>
         private void loadMathador()
         {
-            string[] mathadorStrings = File.ReadAllLines(_filePath);
-            foreach (var mathadorString in mathadorStrings)
+            if (!string.IsNullOrWhiteSpace(_filePath))
             {
-                //var mathadorList = Array.ConvertAll(mathadorString.Split(','), s => int.Parse(s)); // Finalement pas de conversion en int car il est plus simple d'utiliser des string de partout
-                var mathadorList = mathadorString.Split(',');
-                MathadorCollection.Add(new mathadorItem(mathadorList));
+                string[] mathadorStrings = File.ReadAllLines(_filePath);
+                foreach (var mathadorString in mathadorStrings)
+                {
+                    //var mathadorList = Array.ConvertAll(mathadorString.Split(','), s => int.Parse(s)); // Finalement pas de conversion en int car il est plus simple d'utiliser des string de partout
+                    var mathadorList = mathadorString.Split(',');
+                    MathadorCollection.Add(new mathadorItem(mathadorList));
+                }
             }
         }
 
@@ -320,9 +323,12 @@ namespace mathador
             {
                 importFile();
             }
-            loadMathadorsValue(MathadorCollection[rdmIndexMathador.Next(0, MathadorCollection.Count - 1)]);
-            remainingTime = 180;
-            theFinalCountDown.Start();
+            if (MathadorCollection.Count != 0)
+            {
+                loadMathadorsValue(MathadorCollection[rdmIndexMathador.Next(0, MathadorCollection.Count - 1)]);
+                remainingTime = 180;
+                theFinalCountDown.Start();
+            }
         }
 
         private void loadMathadorsValue(mathadorItem item)
@@ -355,8 +361,11 @@ namespace mathador
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.ShowDialog();
-            _filePath = openFileDialog.FileName;
-            loadMathador();
+            if (!string.IsNullOrWhiteSpace(openFileDialog.FileName))
+            {
+                _filePath = openFileDialog.FileName;
+                loadMathador();
+            }
         }
 
         private void NextButton_OnClick(object sender, RoutedEventArgs e)
