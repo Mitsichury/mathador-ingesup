@@ -19,6 +19,10 @@ namespace mathador
 
         public List<mathadorOper> MathadorOperList = new List<mathadorOper>();
 
+        public mathadorItem()
+        {
+        }
+
         #region constructeur
         /// <summary>
         /// Constructeur de MathadorItems prenant un string par valeur en parametre
@@ -37,10 +41,6 @@ namespace mathador
             Value4 = value4.Trim();
             Value5 = value5.Trim();
             ValueToFind = valueToFind.Trim();
-        }
-
-        public mathadorItem()
-        {
         }
 
         /// <summary>

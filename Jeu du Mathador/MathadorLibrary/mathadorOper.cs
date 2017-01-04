@@ -24,11 +24,17 @@ namespace MathadorLibrary
         /// </example>
         //private Func<int, int, int> Operator;
 
-        public mathadorOper(string value1, string value2, string _operator)
+        public mathadorOper(string value1, string value2, string _operator, string result)
         {
             Value1 = value1;
             Value2 = value2;
             Operator = _operator;
+            Result = result;
+        }
+
+        public override string ToString()
+        {
+            return Value1 + " " + Operator + " " + Value2 + " = " + Result;
         }
     }
 }

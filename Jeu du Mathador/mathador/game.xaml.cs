@@ -21,6 +21,7 @@ using Button = System.Windows.Controls.Button;
 using UserControl = System.Windows.Controls.UserControl;
 using System.Timers;
 using System.Windows.Forms.VisualStyles;
+using MathadorLibrary;
 using Newtonsoft.Json;
 using Timer = System.Timers.Timer;
 
@@ -41,10 +42,16 @@ namespace mathador
 
         private Random rdmIndexMathador = new Random();
 
+        private Dictionary<string, int> OperatorPoints = new Dictionary<string, int>();
+
         public game()
         {
             InitializeComponent();
-            theFinalCountDown.Elapsed += OnTimedEvent;            
+            theFinalCountDown.Elapsed += OnTimedEvent;
+            OperatorPoints.Add("+", 1);
+            OperatorPoints.Add("-", 2);
+            OperatorPoints.Add("/", 3);
+            OperatorPoints.Add("X", 1);
         }
 
         private void OnTimedEvent(object sender, ElapsedEventArgs e)
@@ -54,6 +61,7 @@ namespace mathador
             if (remainingTime == 0)
             {
                 theFinalCountDown.Stop();
+                TimerOut();
             }
         }
 
@@ -98,8 +106,8 @@ namespace mathador
                 PropertyChanged(this, new PropertyChangedEventArgs("errorMessage"));
             }
         }
-        private ObservableCollection<string> _historique = new ObservableCollection<string>();
-        public ObservableCollection<string> Historique
+        private ObservableCollection<mathadorOper> _historique = new ObservableCollection<mathadorOper>();
+        public ObservableCollection<mathadorOper> Historique
         {
             get { return _historique; }
             set
@@ -190,8 +198,8 @@ namespace mathador
             }
         }
 
-        private string _points = "0 pts";
-        public string Points
+        private int _points;
+        public int Points
         {
             get { return _points; }
             set
@@ -320,7 +328,8 @@ namespace mathador
                 }
                 if (result >= 0)
                 {
-                    Historique.Add(ValueShown1 + " " + Operator + " " + ValueShown2 + " = " + result);
+                    Historique.Add(new mathadorOper(ValueShown1, ValueShown2, Operator, result.ToString()));
+                    _firstSelectedValue.Background = Brushes.Aqua;
                     _firstSelectedValue.IsEnabled = false;
                     ((TextBlock)_firstSelectedValue.Content).Text = " ";
                     ((TextBlock)_lastSelectedValue.Content).Text = result.ToString();
@@ -396,6 +405,8 @@ namespace mathador
         private void NextButton_OnClick(object sender, RoutedEventArgs e)
         {
             loadMathadorsValue(MathadorCollection[rdmIndexMathador.Next(0, MathadorCollection.Count-1)]);
+            ChangeStateValueButton(true);
+            Historique.Clear();
             NextButton.IsEnabled = false;
         }
 
@@ -409,8 +420,54 @@ namespace mathador
             if(!string.IsNullOrWhiteSpace(Value5)) compteur++;
             if (compteur == 1)
             {
+                CalcPoint();
                 NextButton.IsEnabled = true;
             }
+        }
+
+        private void CalcPoint()
+        {
+            List<string> test = new List<string>();
+            bool isMathador = true;
+            int Pts = 0;
+            if (Value1 == ValueToFind || Value2 == ValueToFind || Value3 == ValueToFind || Value4 == ValueToFind || Value5 == ValueToFind)
+            {
+                foreach (var coup in Historique)
+                {
+                    if (test.Contains(coup.Operator)) isMathador = false;
+                    else
+                    {
+                        test.Add(coup.Operator);
+                    }
+                    Pts += OperatorPoints[coup.Operator];
+                }
+                Points = (isMathador) ? 13 : Pts;
+            }
+        }
+
+        private void ChangeStateValueButton(bool state)
+        {
+            ButtonValue1.IsEnabled = state;
+            ButtonValue2.IsEnabled = state;
+            ButtonValue3.IsEnabled = state;
+            ButtonValue4.IsEnabled = state;
+            ButtonValue5.IsEnabled = state;
+        }
+
+        private void TimerOut()
+        {
+            ChangeStateValueButton(false);
+        }
+
+        private void SkipButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            loadMathadorsValue(MathadorCollection[rdmIndexMathador.Next(0, MathadorCollection.Count - 1)]);
+            ChangeStateValueButton(true);
+            Historique.Clear();
+            NextButton.IsEnabled = false;
+            ValueShown1 = " ";
+            ValueShown2 = " ";
+            Operator = " ";
         }
     }
 }
