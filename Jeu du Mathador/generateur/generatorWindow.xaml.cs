@@ -27,7 +27,7 @@ namespace generateur
     public partial class GenerateurWindow : Window
     {
         public string Path = "";
-        public readonly int MAX_AUTHORIZED = 1000000;             
+        public readonly int MAX_AUTHORIZED = 500;             
         private AsyncCreateFile customThread;
         Regex regex = new Regex("[0-9]");
 

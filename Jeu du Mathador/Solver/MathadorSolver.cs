@@ -4,39 +4,73 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data;
+using System.Text.RegularExpressions;
 
 namespace Solver
 {
     public class MathadorSolver
     {
-        public static bool IsMathador(List<int> listeNb) // liste v1,v2,v2,v4,v5,valueToFind
+        public static bool IsMathador(List<string> listeNb, string valueToFind)
         {
-            //recup de la valeur a trouver...............................
-            int valueToFind = listeNb[5];
+            return GetMathadors(listeNb, valueToFind).Count > 0;
+        }
 
-            //recup liste des 5 valeurs pour les calcules....................................
-            listeNb.RemoveAt(5);
-            int[] nbToCalc = listeNb.ToArray();
+        public static List<string> GetMathadors(List<string> list, string valueTofind)
+        {
+            List<string> listOfCalculs = GetResults(list, valueTofind);
+            List<string> mathadors = new List<string>();
 
-            //création d'une liste de tableau avec les 5 valeurs permutées.......................
-            List<int[]> listePermute = new List<int[]>();
-            listePermute = Permute.Commencer(nbToCalc);
+            foreach (string s in listOfCalculs)
+            {
+                if (s.Contains("+") && s.Contains("-") && s.Contains("*") && s.Contains("/"))
+                {
+                    mathadors.Add(s);
+                }
+            }
+            return mathadors;
+        }
+
+        private static List<string> GetResults(List<string> listeNb, string valueToFind)
+        {
+            IEnumerable<IEnumerable<string>> listePermute = Permute.GetPermutations(listeNb, listeNb.Count);
+
 
             List<List<string>> listeOperation = new List<List<string>>();
 
-            foreach (var tab in listePermute)
+            foreach (IEnumerable<string> tab in listePermute)
             {
-                //listeOperation.Add(CreateListOfString(tab)); 
+                List<string> s = new List<string>();
+                s = tab.ToList();
+                listeOperation.Add(CreateListOfString(s));
             }
+
+            List<string> result = new List<string>();
+            DataTable dt = new DataTable();
+
             
+            int i = 0;
 
+            foreach (List<string> list in listeOperation)
+            {
 
-            return true;
+                listeOperation[i].RemoveRange(0, 85);
+                foreach (string s in list)
+                {
+                    string resultat = dt.Compute(s, "").ToString();
+                    if (resultat == valueToFind)
+                    {
+                        result.Add(s);
+                    }
+                }
+                i++;
+            }
+
+            return result;
         }
 
         public static List<string> CreateListOfString(List<string> tab)
         {
-            //List<string> operation = new List<string>();
 
             if (tab.Count == 1)
             {
@@ -65,13 +99,6 @@ namespace Solver
         }
 
 
-
-        public static List<int> ReturnArrayNbToCalc(List<int> listeNb)
-        {
-            listeNb.RemoveAt(5);       
-            return listeNb;
-        }
-
         public static string Plus(string a, string b)
         {
             string str = a + "+" + b;
@@ -97,66 +124,23 @@ namespace Solver
         }
 
 
-
-        public static void Main()
-        {
- 
-
-
-        }
     }
 
     public class Permute
     {
-        public static List<int[]> Commencer(int[] list)
+
+        public static IEnumerable<IEnumerable<T>> GetPermutations<T>(IEnumerable<T> list, int length)
         {
-            List<int[]> listePermute = new List<int[]>();
-            listePermute = Travaille(list, 0, list.Length - 1, listePermute);
-            return listePermute;
+            if (length == 1) return list.Select(t => new T[] { t });
+
+            return GetPermutations(list, length - 1)
+                .SelectMany(t => list.Where(e => !t.Contains(e)),
+                    (t1, t2) => t1.Concat(new T[] { t2 }));
         }
 
-
-        private static void Echange(ref int a, ref int b)
-        {
-            if (a == b) return;
-            a ^= b;
-            b ^= a;
-            a ^= b;
-        }
-
-
-        private static List<int[]> Travaille(int[] list, int current, int max, List<int[]> listePermute)
-        {
-            
-            int[] tab = new int[5];
-            
-
-            int j;
-            int i;
-            if (current == max)
-            {
-                j = 0;
-                foreach (var item in list)
-                {
-                    Console.Write(Convert.ToString(item));
-                    
-                    tab[j] = (item);
-                    j++;
-
-                }
-                Console.WriteLine(" ");
-                listePermute.Add(tab);
-            }
-            else
-                for (i = current; i <= max; i++)
-                {
-                    Echange(ref list[current], ref list[i]);
-                    Travaille(list, current + 1, max, listePermute); // on descend
-                    Echange(ref list[current], ref list[i]);
-                }
-            return listePermute;
-        }
     }
+
+    
 
 }
 

@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using mathador;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Solver;
 
 namespace generateur
 {
@@ -35,6 +36,8 @@ namespace generateur
             requestStop = true;
         }
 
+
+
         public void GenerateEntries()
         {
             /*
@@ -52,7 +55,15 @@ namespace generateur
                 writer.WriteStartArray();
                 for (float i = 0; i < nb && !requestStop; i++)
                 {
-                    mathadorItem item = new mathadorItem((1 + rnd.Next(12)).ToString(), (1 + rnd.Next(12)).ToString(), (1 + rnd.Next(12)).ToString(), (1 + rnd.Next(20)).ToString(), (1 + rnd.Next(20)).ToString(), (1 + rnd.Next(100)).ToString());
+                    mathadorItem item;
+                    do
+                    {
+                        item = new mathadorItem((1 + rnd.Next(12)).ToString(), (1 + rnd.Next(12)).ToString(),
+                            (1 + rnd.Next(12)).ToString(), (1 + rnd.Next(20)).ToString(), (1 + rnd.Next(20)).ToString(),
+                            (1 + rnd.Next(100)).ToString());
+
+                    } while (!MathadorSolver.IsMathador(item.valuesToList(), item.ValueToFind));
+
 
                     JObject obj = JObject.FromObject(item, serializer);
                     obj.WriteTo(writer);
