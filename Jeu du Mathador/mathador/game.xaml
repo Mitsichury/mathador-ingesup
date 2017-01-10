@@ -112,7 +112,7 @@
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Content="Suivant" FontSize="30" Margin="20,10" IsEnabled="False" Click="NextButton_OnClick" x:Name="NextButton"/>
-            <Button Grid.Column="1" Content="Passer" FontSize="30" Margin="20,10" Click="SkipButton_OnClick"/>
+            <Button Grid.Column="1" Content="Passer" FontSize="30" Margin="20,10" Name="SkipButton" Click="SkipButton_OnClick"/>
             <TextBlock Grid.Column="2" FontSize="30" Text="{Binding ErrorMessage}" Foreground="Red" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Grid>
         <Grid Row="5">

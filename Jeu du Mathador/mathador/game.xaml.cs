@@ -23,6 +23,7 @@ using System.Timers;
 using System.Windows.Forms.VisualStyles;
 using MathadorLibrary;
 using Newtonsoft.Json;
+using Application = System.Windows.Application;
 using Timer = System.Timers.Timer;
 
 namespace mathador
@@ -39,6 +40,7 @@ namespace mathador
         private Button _firstSelectedValue;
         private Button _lastSelectedValue;
         private Button _selectedOperator;
+        private int PLAYING_TIME = 180;
 
         private Random rdmIndexMathador = new Random();
 
@@ -61,7 +63,11 @@ namespace mathador
             if (remainingTime == 0)
             {
                 theFinalCountDown.Stop();
-                TimerOut();
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    TimerOut();
+                }));
+                
             }
         }
 
@@ -198,7 +204,8 @@ namespace mathador
             }
         }
 
-        private int _points;
+        private int _points;        
+
         public int Points
         {
             get { return _points; }
@@ -282,9 +289,7 @@ namespace mathador
         {
             List<mathadorItem> items = new List<mathadorItem>();
             if (!string.IsNullOrWhiteSpace(_filePath))
-            {
-                //string[] mathadorStrings = File.ReadAllLines(_filePath);
-
+            {               
                 using (StreamReader r = new StreamReader(_filePath))
                 {
                     string json = r.ReadToEnd();
@@ -294,12 +299,6 @@ namespace mathador
                 {
                     MathadorCollection.Add(item);
                 }
-                /*foreach (var mathadorString in mathadorStrings)
-                {
-                    //var mathadorList = Array.ConvertAll(mathadorString.Split(','), s => int.Parse(s)); // Finalement pas de conversion en int car il est plus simple d'utiliser des string de partout
-                    var mathadorList = mathadorString.Split(',');
-                    MathadorCollection.Add(new mathadorItem(mathadorList));
-                }*/
             }
         }
 
@@ -359,8 +358,9 @@ namespace mathador
             }
             if (MathadorCollection.Count != 0)
             {
-                loadMathadorsValue(MathadorCollection[rdmIndexMathador.Next(0, MathadorCollection.Count - 1)]);
-                remainingTime = 180;
+                //loadMathadorsValue(MathadorCollection[rdmIndexMathador.Next(0, MathadorCollection.Count - 1)]);
+                loadChallenge();
+                remainingTime = PLAYING_TIME;
                 theFinalCountDown.Start();
             }
         }
@@ -404,10 +404,7 @@ namespace mathador
 
         private void NextButton_OnClick(object sender, RoutedEventArgs e)
         {
-            loadMathadorsValue(MathadorCollection[rdmIndexMathador.Next(0, MathadorCollection.Count-1)]);
-            ChangeStateValueButton(true);
-            Historique.Clear();
-            NextButton.IsEnabled = false;
+            loadChallenge();            
         }
 
         private void canGoToNext()
@@ -452,6 +449,7 @@ namespace mathador
             ButtonValue3.IsEnabled = state;
             ButtonValue4.IsEnabled = state;
             ButtonValue5.IsEnabled = state;
+            SkipButton.IsEnabled = state;
         }
 
         private void TimerOut()
@@ -461,13 +459,18 @@ namespace mathador
 
         private void SkipButton_OnClick(object sender, RoutedEventArgs e)
         {
+            loadChallenge();
+            ValueShown1 = " ";
+            ValueShown2 = " ";
+            Operator = " ";
+        }
+
+        private void loadChallenge()
+        {
             loadMathadorsValue(MathadorCollection[rdmIndexMathador.Next(0, MathadorCollection.Count - 1)]);
             ChangeStateValueButton(true);
             Historique.Clear();
             NextButton.IsEnabled = false;
-            ValueShown1 = " ";
-            ValueShown2 = " ";
-            Operator = " ";
         }
     }
 }
