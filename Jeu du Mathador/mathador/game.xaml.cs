@@ -306,6 +306,7 @@ namespace mathador
         {
             if (!string.IsNullOrWhiteSpace(ValueShown1) && !string.IsNullOrWhiteSpace(ValueShown2) && !string.IsNullOrWhiteSpace(Operator))
             {
+                bool error = false;
                 ErrorMessage = "";
                 int result = 0;
                 int value1 = int.Parse(ValueShown1);
@@ -319,13 +320,20 @@ namespace mathador
                         result = value1 - value2;
                         break;
                     case "/":
+                        if (value2<=0)
+                        {
+                            error = true;
+                            _firstSelectedValue.Background = Brushes.Aqua;
+                            ErrorMessage = "Impossible de diviser par 0 !";
+                            break;
+                        }
                         result = value1 / value2;
                         break;
                     case "X":
                         result = value1 * value2;
                         break;
                 }
-                if (result >= 0)
+                if (result >= 0 && !error)
                 {
                     Historique.Add(new mathadorOper(ValueShown1, ValueShown2, Operator, result.ToString()));
                     _firstSelectedValue.Background = Brushes.Aqua;
