@@ -2,106 +2,79 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Button = System.Windows.Controls.Button;
-using UserControl = System.Windows.Controls.UserControl;
 using System.Timers;
-using System.Windows.Forms.VisualStyles;
 using MathadorLibrary;
 using Newtonsoft.Json;
 using Application = System.Windows.Application;
 using Timer = System.Timers.Timer;
+using MathadorDatabase;
 
 namespace mathador
 {
     /// <summary>
     /// Logique d'interaction pour game.xaml
     /// </summary>
-    public partial class game : UserControl, INotifyPropertyChanged
+    public partial class Game : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        private int remainingTime = 180;
+
+        private DatabaseHelper db;
+
+        private static readonly Timer TheFinalCountDown = new Timer(1000);
+        private readonly string _playerName;
+        private readonly Random _rdmIndexMathador = new Random();
+        private readonly Dictionary<string, int> _operatorPoints = new Dictionary<string, int>();
+
+        private int _remainingTime;
+        private const int PlayingTime = 180;
+
         private string _filePath;
-        private static Timer theFinalCountDown = new Timer(1000);
+
         private Button _firstSelectedValue;
         private Button _lastSelectedValue;
         private Button _selectedOperator;
-        private int PLAYING_TIME = 180;
+        private int _pointsTemp = 0;
 
-        private Random rdmIndexMathador = new Random();
+        private int _finishedChallengeCount;
+        private int _mathadorCount = 0;
 
-        private Dictionary<string, int> OperatorPoints = new Dictionary<string, int>();
+        private int _challengeBeginTime;
+        private int _totalFinishedChallengeTime;
 
-        public game()
+
+
+        public Game(string playerName)
         {
             InitializeComponent();
-            theFinalCountDown.Elapsed += OnTimedEvent;
-            OperatorPoints.Add("+", 1);
-            OperatorPoints.Add("-", 2);
-            OperatorPoints.Add("/", 3);
-            OperatorPoints.Add("X", 1);
+            db = new DatabaseHelper();
+            
+            TheFinalCountDown.Elapsed += OnTimedEvent;
+            _playerName = playerName;
+            _operatorPoints.Add("+", 1);
+            _operatorPoints.Add("-", 2);
+            _operatorPoints.Add("/", 3);
+            _operatorPoints.Add("X", 1);
         }
 
         private void OnTimedEvent(object sender, ElapsedEventArgs e)
         {
-            remainingTime--;
-            Timer = new TimeSpan(0, remainingTime/60, remainingTime%60).ToString(@"mm\:ss");
-            if (remainingTime == 0)
+            _remainingTime--;
+            Timer = new TimeSpan(0, _remainingTime/60, _remainingTime%60).ToString(@"mm\:ss");
+            if (_remainingTime == 0)
             {
-                theFinalCountDown.Stop();
-                Application.Current.Dispatcher.Invoke(new Action(() =>
-                {
-                    TimerOut();
-                }));
-                
+                TheFinalCountDown.Stop();
+                Application.Current.Dispatcher.Invoke(TimerOut);
             }
         }
 
         #region XAMLVariable
-        private string _valueShown1;
-        public string ValueShown1
-        {
-            get { return _valueShown1; }
-            set
-            {
-                _valueShown1 = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("valueshown1"));
-            }
-        }
-        private string _valueShown2;
-        public string ValueShown2
-        {
-            get { return _valueShown2; }
-            set
-            {
-                _valueShown2 = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("valueshown2"));
-            }
-        }
-        private string _operator;
-        public string Operator
-        {
-            get { return _operator; }
-            set
-            {
-                _operator = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("operator"));
-            }
-        }
         private string _errorMessage;
         public string ErrorMessage
         {
@@ -130,6 +103,59 @@ namespace mathador
             {
                 _mathadorCollection = value;
                 PropertyChanged(this, new PropertyChangedEventArgs("MathadorCollection"));
+            }
+        }
+        private string _timer = "00:00";
+        public string Timer
+        {
+            get { return _timer; }
+            set
+            {
+                _timer = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("timer"));
+            }
+        }
+        private int _points;
+        public int Points
+        {
+            get { return _points; }
+            set
+            {
+                _points = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("points"));
+            }
+        }
+
+
+        #region Values
+        private string _valueShown1;
+        public string ValueShown1
+        {
+            get { return _valueShown1; }
+            set
+            {
+                _valueShown1 = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("valueshown1"));
+            }
+        }
+        private string _valueShown2;
+        public string ValueShown2
+        {
+            get { return _valueShown2; }
+            set
+            {
+                _valueShown2 = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("valueshown2"));
+            }
+        }
+        private string _operator;
+        public string Operator
+        {
+            get { return _operator; }
+            set
+            {
+                _operator = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("operator"));
             }
         }
         private string _value1;
@@ -192,33 +218,12 @@ namespace mathador
                 PropertyChanged(this, new PropertyChangedEventArgs("valueToFind"));
             }
         }
-
-        private string _timer = "00:00";
-        public string Timer
-        {
-            get { return _timer; }
-            set
-            {
-                _timer = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("timer"));
-            }
-        }
-
-        private int _points;        
-
-        public int Points
-        {
-            get { return _points; }
-            set
-            {
-                _points = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("points"));
-            }
-        }
+        #endregion
         #endregion
 
         /// <summary>
         /// Fonction recevant l'event click des boutons contenants les valeurs
+        /// La fonction effectue les changement de couleurs d'arrière plans des boutons
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -258,6 +263,7 @@ namespace mathador
 
         /// <summary>
         /// Fonctions recevant l'event click des boutons contenants les opérateurs
+        /// La fonction effectue les changement de couleurs d'arrière plans des boutons
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -285,7 +291,7 @@ namespace mathador
         /// Fonction au startup
         /// Charge le fichier et stock les mathadors
         /// </summary>
-        private void loadMathador()
+        private void LoadMathador()
         {
             List<mathadorItem> items = new List<mathadorItem>();
             if (!string.IsNullOrWhiteSpace(_filePath))
@@ -302,6 +308,9 @@ namespace mathador
             }
         }
 
+        /// <summary>
+        /// Calcul le résultat des deux valeurs séléctionner avec l'opérateur choisi
+        /// </summary>
         private void Calcul()
         {
             if (!string.IsNullOrWhiteSpace(ValueShown1) && !string.IsNullOrWhiteSpace(ValueShown2) && !string.IsNullOrWhiteSpace(Operator))
@@ -335,45 +344,50 @@ namespace mathador
                 }
                 if (result >= 0 && !error)
                 {
-                    Historique.Add(new mathadorOper(ValueShown1, ValueShown2, Operator, result.ToString()));
-                    _firstSelectedValue.Background = Brushes.Aqua;
+                    Historique.Add(new mathadorOper(ValueShown1, ValueShown2, Operator, result.ToString(), _operatorPoints[Operator]));
+                    CalcPoint();
                     _firstSelectedValue.IsEnabled = false;
                     ((TextBlock)_firstSelectedValue.Content).Text = " ";
                     ((TextBlock)_lastSelectedValue.Content).Text = result.ToString();
                 }
                 else
                 {
-                    _firstSelectedValue.Background = Brushes.Aqua;
                     ErrorMessage = "Résultat inférieur à 0 impossible !";
                 }
-                _lastSelectedValue.Background = Brushes.Aqua;
-                _selectedOperator.Background = Brushes.LightGray;
-                _firstSelectedValue = null;
-                _lastSelectedValue = null;
-                _selectedOperator = null;
-                ValueShown1 = "";
-                ValueShown2 = "";
-                Operator = "";
-                canGoToNext();
+                ClearValue();
+                CanGoToNext();
             }
+        }
+
+        private void ClearValue()
+        {
+            _firstSelectedValue.Background = Brushes.Aqua;
+            _lastSelectedValue.Background = Brushes.Aqua;
+            _selectedOperator.Background = Brushes.LightGray;
+            _firstSelectedValue = null;
+            _lastSelectedValue = null;
+            _selectedOperator = null;
+            ValueShown1 = "";
+            ValueShown2 = "";
+            Operator = "";
         }
 
         private void LaunchGameMenu_OnClick(object sender, RoutedEventArgs e)
         {
             if (MathadorCollection.Count == 0)
             {
-                importFile();
+                ImportFile();
             }
             if (MathadorCollection.Count != 0)
             {
-                //loadMathadorsValue(MathadorCollection[rdmIndexMathador.Next(0, MathadorCollection.Count - 1)]);
-                loadChallenge();
-                remainingTime = PLAYING_TIME;
-                theFinalCountDown.Start();
+                LoadChallenge();
+                _remainingTime = PlayingTime;
+                _challengeBeginTime = _remainingTime;
+                TheFinalCountDown.Start();
             }
         }
 
-        private void loadMathadorsValue(mathadorItem item)
+        private void LoadMathadorsValue(mathadorItem item)
         {        
             Value1 = item.Value1;
             Value2 = item.Value2;
@@ -396,58 +410,47 @@ namespace mathador
 
         private void ImportMenu_OnClick(object sender, RoutedEventArgs e)
         {
-            importFile();
+            ImportFile();
         }
 
-        private void importFile()
+        private void ImportFile()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.ShowDialog();
             if (!string.IsNullOrWhiteSpace(openFileDialog.FileName))
             {
                 _filePath = openFileDialog.FileName;
-                loadMathador();
+                LoadMathador();
             }
         }
 
         private void NextButton_OnClick(object sender, RoutedEventArgs e)
         {
-            loadChallenge();            
+            _finishedChallengeCount++;
+            _totalFinishedChallengeTime += _challengeBeginTime - _remainingTime;
+            _challengeBeginTime = _remainingTime;
+            Points = IsMathador() ? _pointsTemp + 13 : Points;
+            _pointsTemp = Points;
+            LoadChallenge();            
         }
 
-        private void canGoToNext()
+        private void CanGoToNext()
         {
-            int compteur = 0;
-            if(!string.IsNullOrWhiteSpace(Value1)) compteur++;
-            if(!string.IsNullOrWhiteSpace(Value2)) compteur++;
-            if(!string.IsNullOrWhiteSpace(Value3)) compteur++;
-            if(!string.IsNullOrWhiteSpace(Value4)) compteur++;
-            if(!string.IsNullOrWhiteSpace(Value5)) compteur++;
-            if (compteur == 1)
+            if (Value1 == ValueToFind
+                || Value2 == ValueToFind
+                || Value3 == ValueToFind
+                || Value4 == ValueToFind
+                || Value5 == ValueToFind)
             {
-                CalcPoint();
                 NextButton.IsEnabled = true;
             }
+            else
+                NextButton.IsEnabled = false;
         }
 
         private void CalcPoint()
         {
-            List<string> test = new List<string>();
-            bool isMathador = true;
-            int Pts = 0;
-            if (Value1 == ValueToFind || Value2 == ValueToFind || Value3 == ValueToFind || Value4 == ValueToFind || Value5 == ValueToFind)
-            {
-                foreach (var coup in Historique)
-                {
-                    if (test.Contains(coup.Operator)) isMathador = false;
-                    else
-                    {
-                        test.Add(coup.Operator);
-                    }
-                    Pts += OperatorPoints[coup.Operator];
-                }
-                Points = (isMathador) ? 13 : Pts;
-            }
+            Points += _operatorPoints[Historique.Last().Operator];
         }
 
         private void ChangeStateValueButton(bool state)
@@ -463,22 +466,41 @@ namespace mathador
         private void TimerOut()
         {
             ChangeStateValueButton(false);
+            DatabaseEntry score = new DatabaseEntry(_playerName, _pointsTemp, _totalFinishedChallengeTime/_finishedChallengeCount, _mathadorCount, _pointsTemp / _finishedChallengeCount);
+            db.Insert(score);
         }
 
         private void SkipButton_OnClick(object sender, RoutedEventArgs e)
         {
-            loadChallenge();
+            foreach (var coup in Historique)
+            {
+                Points -= coup.Points;
+            }
             ValueShown1 = " ";
             ValueShown2 = " ";
             Operator = " ";
+            LoadChallenge();
         }
 
-        private void loadChallenge()
+        private void LoadChallenge()
         {
-            loadMathadorsValue(MathadorCollection[rdmIndexMathador.Next(0, MathadorCollection.Count - 1)]);
+            LoadMathadorsValue(MathadorCollection[_rdmIndexMathador.Next(0, MathadorCollection.Count - 1)]);
             ChangeStateValueButton(true);
             Historique.Clear();
             NextButton.IsEnabled = false;
+        }
+
+        private bool IsMathador()
+        {
+            for (int i = 0; i < Historique.Count - 1; i++)
+            {
+                for (int j = i + 1; j <= Historique.Count - 1; j++)
+                {
+                    if (Historique[i].Operator == Historique[j].Operator) return false;
+                }
+            }
+            _mathadorCount++;
+            return true;
         }
     }
 }
