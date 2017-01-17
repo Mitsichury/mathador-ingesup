@@ -21,12 +21,19 @@
             <RowDefinition Height="3*"/>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="2*"/>
+      
         </Grid.RowDefinitions>
-        <Button Grid.Column="1" Grid.Row="2" Content="Jouer" FontSize="80" Click="LaunchMenu_OnClick" 
+
+        <Button Grid.Column="1" Grid.Row="2" Content="Jouer" FontSize="70" Click="LaunchMenu_OnClick" 
                 BorderThickness="0" Opacity="0.85" VerticalContentAlignment="Center"/>
-        <Button Grid.Column="0" Grid.Row="2" Content="Générer" FontSize="80" Click="GenerateMenu_OnClick" 
+        <Button Grid.Column="0" Grid.Row="2" Content="Générer" FontSize="70" Click="GenerateMenu_OnClick" 
                 BorderThickness="0" Opacity="0.85" VerticalContentAlignment="Center"/>
-        <Button Grid.Column="2" Grid.Row="2" Content="Quitter" FontSize="80" Click="QuitMenu_OnClick" 
+        <Button Grid.Column="2" Grid.Row="2" Content="Quitter" FontSize="70" Click="QuitMenu_OnClick" 
                 BorderThickness="0" Opacity="0.85" VerticalContentAlignment="Center"/>
+
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="Bonjour" FontSize="50" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0"/>
+        <TextBox x:Name="NameBox" Grid.Row="0" Grid.Column="1" Text="{Binding PlayerName}" FontSize="50" 
+                 VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0" Width="300" HorizontalContentAlignment="Center"
+                  BorderThickness="0,0,0,2" Background="Transparent"/>
     </Grid>
 </UserControl>
