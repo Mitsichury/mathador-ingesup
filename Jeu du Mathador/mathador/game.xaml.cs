@@ -475,7 +475,7 @@ namespace mathador
         private void TimerOut()
         {
             ChangeStateValueButton(false);
-            DatabaseEntry score = new DatabaseEntry(_playerName, _pointsTemp, _totalFinishedChallengeTime/_finishedChallengeCount, _mathadorCount, _pointsTemp / _finishedChallengeCount);
+            DatabaseEntry score = new DatabaseEntry(_playerName, _pointsTemp, (_finishedChallengeCount>0) ?_totalFinishedChallengeTime/_finishedChallengeCount:0, _mathadorCount, (_finishedChallengeCount > 0) ? _pointsTemp / _finishedChallengeCount:0);
             db.Insert(score);
         }
 
