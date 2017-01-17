@@ -15,14 +15,18 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        <Button Grid.Row="1" Grid.Column="1" Margin="20,10" Content="Jouer" FontSize="80" Click="LaunchMenu_OnClick"/>
-        <Button Grid.Row="2" Grid.Column="1" Margin="20,10" Content="Générer" FontSize="80" Click="GenerateMenu_OnClick"/>
-        <Button Grid.Row="3" Grid.Column="1" Margin="20,10" Content="Quitter" FontSize="80" Click="QuitMenu_OnClick"/>
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="Bonjour" FontSize="50" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0"/>
+        <TextBox x:Name="NameBox" Grid.Row="0" Grid.Column="1" Text="{Binding PlayerName}" FontSize="50" 
+                 VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0" Width="300" HorizontalContentAlignment="Center"
+                  BorderThickness="0,0,0,2" Background="Transparent"/>
+        <Button Grid.Row="1" Grid.Column="1" Margin="20,10" Content="Jouer" FontSize="80" FontFamily="Calibri" Click="LaunchMenu_OnClick"/>
+        <Button Grid.Row="2" Grid.Column="1" Margin="20,10" Content="Générer" FontSize="80" FontFamily="Calibri" Click="GenerateMenu_OnClick"/>
+        <Button Grid.Row="3" Grid.Column="1" Margin="20,10" Content="Quitter" FontSize="80" FontFamily="Calibri" Click="QuitMenu_OnClick"/>
     </Grid>
 </UserControl>

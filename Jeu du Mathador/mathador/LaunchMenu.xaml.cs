@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,16 +19,32 @@ namespace mathador
     /// <summary>
     /// Logique d'interaction pour launch_menu.xaml
     /// </summary>
-    public partial class LaunchMenu : UserControl
+    public partial class LaunchMenu : UserControl, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public LaunchMenu()
         {
             InitializeComponent();
         }
 
+        #region XAMLVariable
+        private string _playerName;
+        public string PlayerName
+        {
+            get { return _playerName; }
+            set
+            {
+                _playerName = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("playerName"));
+            }
+        }
+        #endregion
+
         private void LaunchMenu_OnClick(object sender, RoutedEventArgs e)
         {
-            ((Window) Parent).Content = new game();
+            if(!string.IsNullOrWhiteSpace(PlayerName))
+                ((Window) Parent).Content = new Game(PlayerName);
         }
 
         private void GenerateMenu_OnClick(object sender, RoutedEventArgs e)

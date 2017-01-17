@@ -15,6 +15,8 @@ namespace MathadorLibrary
 
         public string Result;
 
+        public int Points;
+
         /// <summary>
         /// Grâce à ca, on a juste à utiliser la variable et l'opération se fait toute seul
         /// En faite c'est con mais on n'en a pas besoin on veut juste stocker donc shit....
@@ -24,17 +26,18 @@ namespace MathadorLibrary
         /// </example>
         //private Func<int, int, int> Operator;
 
-        public mathadorOper(string value1, string value2, string _operator, string result)
+        public mathadorOper(string value1, string value2, string _operator, string result, int points)
         {
             Value1 = value1;
             Value2 = value2;
             Operator = _operator;
             Result = result;
+            Points = points;
         }
 
         public override string ToString()
         {
-            return Value1 + " " + Operator + " " + Value2 + " = " + Result;
+            return Value1 + " " + Operator + " " + Value2 + " = " + Result + " - " + Points + " Pts";
         }
     }
 }
