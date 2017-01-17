@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using mathador.Annotations;
 using MathadorLibrary;
 
 namespace mathador
@@ -18,14 +22,25 @@ namespace mathador
     /// <summary>
     /// Logique d'interaction pour HighScoreWindow.xaml
     /// </summary>
-    public partial class HighScoreWindow : Window
+    public partial class HighScoreWindow : INotifyPropertyChanged
     {
-        private List<DatabaseEntry> list;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public HighScoreWindow(List<DatabaseEntry> list)
         {
             InitializeComponent();
-            this.list = list;
+            list.ForEach(x => HighScoreList.Add(x));
+        }
+
+        private ObservableCollection<DatabaseEntry> _HighScoreList = new ObservableCollection<DatabaseEntry>();
+        public ObservableCollection<DatabaseEntry> HighScoreList
+        {
+            get { return _HighScoreList; }
+            set
+            {
+                _HighScoreList = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("highScoreList"));
+            }
         }
     }
 }

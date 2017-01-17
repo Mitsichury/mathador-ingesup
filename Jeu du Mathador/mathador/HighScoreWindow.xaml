@@ -3,10 +3,21 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:mathador"
         mc:Ignorable="d"
-        Title="HighScoreWindow" Height="300" Width="300">
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        ResizeMode="NoResize"
+        Title="HighScoreWindow" Height="300" Width="548">
     <Grid>
-        
+        <ListView ItemsSource="{Binding HighScoreList}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Joueur" DisplayMemberBinding="{Binding NomJoueur}" Width="70"/>
+                    <GridViewColumn Header="Points" DisplayMemberBinding="{Binding Points}" Width="60"/>
+                    <GridViewColumn Header="Temps moyens / Math" DisplayMemberBinding="{Binding TempsMoyen}" Width="150"/>
+                    <GridViewColumn Header="Mathador réussis" DisplayMemberBinding="{Binding NombreMatahdor}" Width="140"/>
+                    <GridViewColumn Header="Points moyen" DisplayMemberBinding="{Binding PointsMoyen}" Width="110"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>
