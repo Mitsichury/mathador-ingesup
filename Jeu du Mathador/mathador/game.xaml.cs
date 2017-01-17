@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
@@ -495,6 +496,27 @@ namespace mathador
 
         private void wizz()
         {
+            Thread wizzy = new Thread(() =>
+            {
+                int i = 0;
+                while (i<5)
+                {
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
+                        ((Window)Parent).Left += 100;
+                    }));
+
+                    Thread.Sleep(20);
+
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
+                        ((Window)Parent).Left -= 100;
+                    }));
+                    Thread.Sleep(20);
+                    i++;
+                }                
+            });
+            wizzy.Start();
         }
 
 
