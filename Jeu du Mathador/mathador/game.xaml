@@ -29,6 +29,7 @@
                     <MenuItem Header="Jeu">
                         <MenuItem Header="Lancer" Click="LaunchGameMenu_OnClick"/>
                         <MenuItem Header="Choisir un mathador" Click="ShowMathadorMenu_OnClick"/>
+                        <MenuItem Header="Meilleurs scores" Click="ShowHighScore_OnClick"/>
                     </MenuItem>
                     <MenuItem Header="Options">
                         <MenuItem />
