@@ -15,6 +15,10 @@ using Newtonsoft.Json;
 using Application = System.Windows.Application;
 using Timer = System.Timers.Timer;
 using MathadorDatabase;
+using System.Windows.Input;
+using System.Media;
+
+
 
 namespace mathador
 {
@@ -48,11 +52,15 @@ namespace mathador
         private int _challengeBeginTime;
         private int _totalFinishedChallengeTime;
 
+        string keyboardInput = "";
+        SoundPlayer audio = new SoundPlayer(mathador.Properties.Resources.Music);
+
 
 
         public Game(string playerName)
         {
             InitializeComponent();
+            
             db = new DatabaseHelper();
             
             TheFinalCountDown.Elapsed += OnTimedEvent;
@@ -497,6 +505,33 @@ namespace mathador
         {
         }
 
+
+        //private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        //{
+        //    Console.WriteLine(e.Key);
+        //    keyboardInput = keyboardInput + e.Key.ToString();
+
+        //}
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(this);
+            window.KeyDown += ListenCheatCode;
+        }
+
+        private void ListenCheatCode(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            Console.WriteLine(e.Key);
+            keyboardInput = keyboardInput + e.Key.ToString();
+            if (keyboardInput.Contains("MUSIC"))
+            {
+                //launch good music               
+                audio.Play();
+                
+                keyboardInput = "";
+
+            }
+        }
 
         private bool IsMathador()
         {
