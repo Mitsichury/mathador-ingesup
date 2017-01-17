@@ -468,6 +468,7 @@ namespace mathador
         private void SkipButton_OnClick(object sender, RoutedEventArgs e)
         {
             loadChallenge();
+            wizz();
             ValueShown1 = " ";
             ValueShown2 = " ";
             Operator = " ";
@@ -479,6 +480,11 @@ namespace mathador
             ChangeStateValueButton(true);
             Historique.Clear();
             NextButton.IsEnabled = false;
+        }
+
+        private void wizz()
+        {
+            
         }
     }
 }
