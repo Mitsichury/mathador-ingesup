@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
@@ -15,6 +16,10 @@ using Newtonsoft.Json;
 using Application = System.Windows.Application;
 using Timer = System.Timers.Timer;
 using MathadorDatabase;
+using System.Windows.Input;
+using System.Media;
+
+
 
 namespace mathador
 {
@@ -48,10 +53,14 @@ namespace mathador
         private int _challengeBeginTime;
         private int _totalFinishedChallengeTime;
 
+        string keyboardInput = "";
+        SoundPlayer audio = new SoundPlayer(mathador.Properties.Resources.Music);
+
 
         public Game(string playerName)
         {
             InitializeComponent();
+            
             db = new DatabaseHelper();
 
             TheFinalCountDown.Elapsed += OnTimedEvent;
@@ -502,9 +511,12 @@ namespace mathador
         private void TimerOut()
         {
             ChangeStateValueButton(false);
-            DatabaseEntry score = new DatabaseEntry(_playerName, _pointsTemp,
-                _totalFinishedChallengeTime / _finishedChallengeCount, _mathadorCount,
-                _pointsTemp / _finishedChallengeCount);
+            DatabaseEntry score = new DatabaseEntry(
+                _playerName, 
+                _pointsTemp, 
+                _finishedChallengeCount>0 ?_totalFinishedChallengeTime/_finishedChallengeCount:0
+                , _mathadorCount, _finishedChallengeCount > 0 ? _pointsTemp / _finishedChallengeCount:0
+            );
             db.Insert(score);
         }
 
@@ -533,8 +545,56 @@ namespace mathador
 
         private void wizz()
         {
+            Thread wizzy = new Thread(() =>
+            {
+                int i = 0;
+                while (i<5)
+                {
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
+                        ((Window)Parent).Left += 100;
+                    }));
+
+                    Thread.Sleep(20);
+
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
+                        ((Window)Parent).Left -= 100;
+                    }));
+                    Thread.Sleep(20);
+                    i++;
+                }                
+            });
+            wizzy.Start();
         }
 
+
+        //private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        //{
+        //    Console.WriteLine(e.Key);
+        //    keyboardInput = keyboardInput + e.Key.ToString();
+
+        //}
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(this);
+            window.KeyDown += ListenCheatCode;
+        }
+
+        private void ListenCheatCode(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            Console.WriteLine(e.Key);
+            keyboardInput = keyboardInput + e.Key.ToString();
+            if (keyboardInput.Contains("MUSIC"))
+            {
+                //launch good music               
+                audio.Play();
+                
+                keyboardInput = "";
+
+            }
+        }
 
         private bool IsMathador()
         {

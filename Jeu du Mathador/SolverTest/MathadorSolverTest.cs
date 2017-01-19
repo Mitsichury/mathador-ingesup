@@ -46,9 +46,9 @@ namespace SolverTest
         }
 
         [TestMethod]
-        public void IsMathadorTest()
+        public void CreateListOfStringTest()
         {
-            List<string> list = new List<string>{"1","2","3","4","5","20"};
+            List<string> list = new List<string>{"1","2","3","4","5"};
 
 
             List<string> tmp = MathadorSolver.CreateListOfString(list);
@@ -62,40 +62,50 @@ namespace SolverTest
         }
 
         [TestMethod]
-        public void ReturnArrayNbToCalcTest()
+        public void IsMathadorTest()
         {
-            List<int> listTest = new List<int> { 1, 2, 3, 4, 5, 20 };
-            List<int> expected = new List<int> { 1, 2, 3, 4, 5 };
+            List<string> list = new List<string> { "2", "4", "6", "8", "10" }; //echec pour 1,2,3,4,5
+            string valueToFind = "20";
 
+            bool isMathador = MathadorSolver.IsMathador(list, valueToFind);
 
-            List<int> result = MathadorSolver.ReturnArrayNbToCalc(listTest);
+            Assert.AreEqual(true, isMathador);
+            
+        }
 
-            CollectionAssert.AreEqual(result, expected);
+        [TestMethod]
+        public void IsNotMathadorTest()
+        {
+            List<string> list = new List<string> { "12", "12", "12", "12", "12" };
+            string valueToFind = "15";
 
+            bool isMathador = MathadorSolver.IsMathador(list, valueToFind);
+
+            Assert.AreEqual(false, isMathador);
 
         }
 
 
         [TestMethod]
-        public void PermuteTest()
+        public void GetPermutationsTest()
         {
-            int[] list = new int[] {1,2,3,4,5};
-            List<int[]> listePermute = Permute.Commencer(list);
+            List<string> list = new List<string> { "1", "2", "3", "4", "5" };
 
- 
-            Console.WriteLine(listePermute.Count.ToString());
-            Console.WriteLine(listePermute.ToString());
+
+            IEnumerable<IEnumerable<string>> tmp = Permute.GetPermutations(list, list.Count);
+
+            foreach (IEnumerable<string> s in tmp)
+            {
+
+                Console.WriteLine(s.ToList());
+
+            }
 
             int expected = 120;
-            int result = listePermute.Count;
+            int result = tmp.Count();
 
-            Assert.AreEqual(expected, result);
-        }
+            Assert.AreEqual(expected,result);
 
-        [TestMethod]
-        public void ChercheCombinaisonsTest()
-        {
-            
         }
 
     }
