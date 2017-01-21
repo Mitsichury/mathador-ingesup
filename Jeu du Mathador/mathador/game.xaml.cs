@@ -267,7 +267,7 @@ namespace mathador
         private void ValueButton_OnClick(object sender, RoutedEventArgs e)
         {
             var button = e.OriginalSource as Button;
-            if (button != _firstSelectedValue && button != _lastSelectedValue)
+            if (!button.Equals(_firstSelectedValue) && !button.Equals(_lastSelectedValue))
             {
                 if (string.IsNullOrWhiteSpace(ValueShown1))
                 {
@@ -279,12 +279,11 @@ namespace mathador
                     ValueShown2 = ((TextBlock) button.Content).Text;
                     _lastSelectedValue = button;
                 }
-                button.Background = Brushes.SaddleBrown;
                 Calcul();
             }
             else
             {
-                if (button == _firstSelectedValue)
+                if (button.Equals(_firstSelectedValue))
                 {
                     ValueShown1 = "";
                     _firstSelectedValue = null;
@@ -294,7 +293,6 @@ namespace mathador
                     ValueShown2 = "";
                     _lastSelectedValue = null;
                 }
-                button.Background = Brushes.Aqua;
             }
         }
 
