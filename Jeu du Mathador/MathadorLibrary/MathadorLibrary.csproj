@@ -49,7 +49,15 @@
     <Compile Include="mathadorItems.cs" />
     <Compile Include="mathadorOper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UiElement.cs" />
+    <Compile Include="UiElement.xaml.cs">
+      <DependentUpon>UiElement.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="UiElement.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
