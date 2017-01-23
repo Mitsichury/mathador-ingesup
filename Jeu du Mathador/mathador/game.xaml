@@ -67,40 +67,25 @@
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="ButtonValue1" Grid.Column="0" VerticalAlignment="Center" Click="ValueButton_OnClick" Margin="20,0" Template="{StaticResource ValueButton}">
-                <Button.Resources>
-                    <Style TargetType="{x:Type TextBlock}">
-                        <Setter Property="Text" Value="{Binding Value1}"/>
-                    </Style>
-                </Button.Resources>
+            <Button x:Name="ButtonValue1" Grid.Column="0" VerticalAlignment="Center" Click="ValueButton_OnClick" Margin="20,0"
+                     Background="Transparent" BorderThickness="0,0,0,5" BorderBrush="Bisque">
+                <TextBlock FontSize="50" TextAlignment="Center" Foreground="White" Text="{Binding Value1}"/>
             </Button>
-            <Button x:Name="ButtonValue2" Grid.Column="1" VerticalAlignment="Center" Click="ValueButton_OnClick" Margin="20,0" Template="{StaticResource ValueButton}">
-                <Button.Resources>
-                    <Style TargetType="{x:Type TextBlock}">
-                        <Setter Property="Text" Value="{Binding Value2}"/>
-                    </Style>
-                </Button.Resources>
+            <Button x:Name="ButtonValue2" Grid.Column="1" VerticalAlignment="Center" Click="ValueButton_OnClick" Margin="20,0"
+                     Background="Transparent" BorderThickness="0,0,0,5" BorderBrush="Bisque">
+                <TextBlock FontSize="50" TextAlignment="Center" Foreground="White" Text="{Binding Value2}"/>
             </Button>
-            <Button x:Name="ButtonValue3" Grid.Column="2" VerticalAlignment="Center" Click="ValueButton_OnClick" Margin="20,0" Template="{StaticResource ValueButton}">
-                <Button.Resources>
-                    <Style TargetType="{x:Type TextBlock}">
-                        <Setter Property="Text" Value="{Binding Value3}"/>
-                    </Style>
-                </Button.Resources>
+            <Button x:Name="ButtonValue3" Grid.Column="2" VerticalAlignment="Center" Click="ValueButton_OnClick" Margin="20,0"
+                     Background="Transparent" BorderThickness="0,0,0,5" BorderBrush="Bisque">
+                <TextBlock FontSize="50" TextAlignment="Center" Foreground="White" Text="{Binding Value3}"/>
             </Button>
-            <Button x:Name="ButtonValue4" Grid.Column="3" VerticalAlignment="Center" Click="ValueButton_OnClick" Margin="20,0" Template="{StaticResource ValueButton}">
-                <Button.Resources>
-                    <Style TargetType="{x:Type TextBlock}">
-                        <Setter Property="Text" Value="{Binding Value4}"/>
-                    </Style>
-                </Button.Resources>
+            <Button x:Name="ButtonValue4" Grid.Column="3" VerticalAlignment="Center" Click="ValueButton_OnClick" Margin="20,0"
+                     Background="Transparent" BorderThickness="0,0,0,5" BorderBrush="Bisque">
+                <TextBlock FontSize="50" TextAlignment="Center" Foreground="White" Text="{Binding Value4}"/>
             </Button>
-            <Button x:Name="ButtonValue5" Grid.Column="4" VerticalAlignment="Center" Click="ValueButton_OnClick" Margin="20,0" Template="{StaticResource ValueButton}">
-                <Button.Resources>
-                    <Style TargetType="{x:Type TextBlock}">
-                        <Setter Property="Text" Value="{Binding Value5}"/>
-                    </Style>
-                </Button.Resources>
+            <Button x:Name="ButtonValue5" Grid.Column="4" VerticalAlignment="Center" Click="ValueButton_OnClick" Margin="20,0"
+                     Background="Transparent" BorderThickness="0,0,0,5" BorderBrush="Bisque">
+                <TextBlock FontSize="50" TextAlignment="Center" Foreground="White" Text="{Binding Value5}"/>
             </Button>
             <TextBlock Grid.Column="5" Background="Aqua" Text="{Binding ValueToFind}" FontSize="100" TextAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
