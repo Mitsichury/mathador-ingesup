@@ -18,7 +18,7 @@ using Timer = System.Timers.Timer;
 using MathadorDatabase;
 using System.Windows.Input;
 using System.Media;
-
+using System.Windows.Data;
 
 
 namespace mathador
@@ -55,7 +55,6 @@ namespace mathador
 
         string keyboardInput = "";
         SoundPlayer audio = new SoundPlayer(mathador.Properties.Resources.Music);
-
 
         public Game(string playerName)
         {
@@ -128,7 +127,7 @@ namespace mathador
             set
             {
                 _timer = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("timer"));
+                if(this._contentLoaded) PropertyChanged(this, new PropertyChangedEventArgs("timer"));
             }
         }
 
@@ -286,14 +285,13 @@ namespace mathador
                 if (button.Equals(_firstSelectedValue))
                 {
                     ValueShown1 = "";
-                    _firstSelectedValue = null;
                 }
                 else
                 {
                     ValueShown2 = "";
-                    _lastSelectedValue = null;
                 }
             }
+            CanGoToNext();
         }
 
         /// <summary>
@@ -384,15 +382,41 @@ namespace mathador
                         _operatorPoints[Operator]));
                     CalcPoint();
                     _firstSelectedValue.IsEnabled = false;
-                    ((TextBlock) _firstSelectedValue.Content).Text = " ";
-                    ((TextBlock) _lastSelectedValue.Content).Text = result.ToString();
+                    SetValue(_firstSelectedValue, " ");
+                    SetValue(_lastSelectedValue, result.ToString());
                 }
                 else
                 {
                     ErrorMessage = "Résultat inférieur à 0 impossible !";
                 }
                 ClearValue();
-                CanGoToNext();
+            }
+        }
+
+        /// <summary>
+        /// Permet de cibler une variable binder sur les ValueButton basé sur leurs noms
+        /// </summary>
+        /// <param name="button"></param>
+        /// <param name="valueToSet"></param>
+        private void SetValue(Button button, string valueToSet)
+        {
+            switch (button.Name)
+            {
+                case "ButtonValue1":
+                    Value1 = valueToSet;
+                    break;
+                case "ButtonValue2":
+                    Value2 = valueToSet;
+                    break;
+                case "ButtonValue3":
+                    Value3 = valueToSet;
+                    break;
+                case "ButtonValue4":
+                    Value4 = valueToSet;
+                    break;
+                case "ButtonValue5":
+                    Value5 = valueToSet;
+                    break;
             }
         }
 
@@ -431,7 +455,7 @@ namespace mathador
             Value3 = item.Value3;
             Value4 = item.Value4;
             Value5 = item.Value5;
-            ValueToFind = item.Value2;
+            ValueToFind = item.ValueToFind;
         }
 
         private void CloseMenu_OnClick(object sender, RoutedEventArgs e)
@@ -534,8 +558,8 @@ namespace mathador
 
         private void LoadChallenge()
         {
-            LoadMathadorsValue(MathadorCollection[_rdmIndexMathador.Next(0, MathadorCollection.Count - 1)]);
             ChangeStateValueButton(true);
+            LoadMathadorsValue(MathadorCollection[_rdmIndexMathador.Next(0, MathadorCollection.Count - 1)]);
             Historique.Clear();
             NextButton.IsEnabled = false;
         }
