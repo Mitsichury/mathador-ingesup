@@ -393,9 +393,9 @@ namespace mathador
                 {
                     ErrorMessage = "Résultat inférieur à 0 impossible !";
                 }
-                ClearValue();
-                CanGoToNext();
+                ClearValue();               
             }
+            CanGoToNext();
         }
 
         private void ClearValue()

@@ -54,6 +54,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MathadorLibrary\MathadorLibrary.csproj">
+      <Project>{0b247ffd-fa08-42ac-945f-2cdcf025666d}</Project>
+      <Name>MathadorLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Solver\Solver.csproj">
       <Project>{4e6aa840-f868-4a59-8bde-8d6a70c38c67}</Project>
       <Name>Solver</Name>

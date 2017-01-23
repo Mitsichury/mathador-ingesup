@@ -43,6 +43,12 @@
     <Compile Include="MathadorSolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MathadorLibrary\MathadorLibrary.csproj">
+      <Project>{0B247FFD-FA08-42AC-945F-2CDCF025666D}</Project>
+      <Name>MathadorLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
