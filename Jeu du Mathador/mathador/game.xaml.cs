@@ -375,7 +375,6 @@ namespace mathador
                         if (value2 <= 0)
                         {
                             error = true;
-                            _firstSelectedValue.Background = Brushes.Aqua;
                             ErrorMessage = "Impossible de diviser par 0 !";
                             break;
                         }
@@ -432,9 +431,9 @@ namespace mathador
 
         private void ClearValue()
         {
-            _firstSelectedValue.Background = Brushes.Aqua;
-            _lastSelectedValue.Background = Brushes.Aqua;
-            _selectedOperator.Background = Brushes.LightGray;
+            if (_firstSelectedValue != null) _firstSelectedValue.BorderBrush = Brushes.Bisque;
+            if (_lastSelectedValue != null) _lastSelectedValue.BorderBrush = Brushes.Bisque;
+            if (_selectedOperator != null) _selectedOperator.Background = Brushes.Black;
             _firstSelectedValue = null;
             _lastSelectedValue = null;
             _selectedOperator = null;
@@ -564,6 +563,7 @@ namespace mathador
             ValueShown1 = " ";
             ValueShown2 = " ";
             Operator = " ";
+            ClearValue();
             LoadChallenge();
         }
 
