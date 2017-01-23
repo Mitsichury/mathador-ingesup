@@ -5,7 +5,9 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using MathadorLibrary;
 
 namespace Solver
 {
@@ -46,9 +48,8 @@ namespace Solver
             }
 
             List<string> result = new List<string>();
-            DataTable dt = new DataTable();
-
             
+
             int i = 0;
 
             foreach (List<string> list in listeOperation)
@@ -57,9 +58,11 @@ namespace Solver
                 listeOperation[i].RemoveRange(0, 85);
                 foreach (string s in list)
                 {
-                    string resultat = dt.Compute(s, "").ToString();
+                    string resultat = compute(s).ToString();
+                    
                     if (resultat == valueToFind)
                     {
+                        Console.WriteLine(s + "=" + resultat);
                         result.Add(s);
                     }
                 }
@@ -123,6 +126,64 @@ namespace Solver
             return str;
         }
 
+        public static int compute(string s)
+        {
+            bool isFirst = true;
+            int state = 0;
+            char _operator = '0';
+
+            int lastIndex = 0;            
+            int i = 0;
+
+            foreach (char c in s)
+            {
+                if (!Char.IsDigit(c))
+                {
+                    if (isFirst)
+                    {
+                        state = Int32.Parse(s.Substring(lastIndex, i - lastIndex));
+                        _operator = c;
+                        isFirst = false;
+                        lastIndex = i + 1;
+                    }
+                    else
+                    {
+                        state = exec(state, _operator, Int32.Parse(s.Substring(lastIndex, i - lastIndex)));
+                        _operator = c;
+                        lastIndex = i + 1;
+                    }
+                }
+                i++;
+            }
+
+            state = exec(state, _operator, Int32.Parse(s.Substring(lastIndex, i - lastIndex)));
+
+            return state;
+        }
+
+        public static int exec(int state, char _operator, int value)
+        {
+            int result = state;
+            switch (_operator)
+            {
+                case '*':
+                    result = state * value;
+                    break;
+                case '+':
+                    result = state + value;                    
+                    break;
+                case '-':
+                    result = state - value;
+                    break;
+                case '/':
+                    result = state / value;
+                    break;
+                default:
+                    throw new Exception("bad operator");
+            }
+
+            return result;
+        }
 
     }
 

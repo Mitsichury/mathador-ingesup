@@ -85,6 +85,13 @@ namespace SolverTest
 
         }
 
+        [TestMethod]
+        public void testCalculation()
+        {
+            string s = "11+4*6*7/12";
+            int result = 52;
+            Assert.AreEqual(result, MathadorSolver.compute(s));
+        }
 
         [TestMethod]
         public void GetPermutationsTest()

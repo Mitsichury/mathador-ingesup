@@ -19,6 +19,7 @@ using MathadorDatabase;
 using System.Windows.Input;
 using System.Media;
 using System.Windows.Data;
+using Solver;
 
 
 namespace mathador
@@ -242,6 +243,7 @@ namespace mathador
         }
 
         private string _valueToFind;
+        private mathadorItem _currentMathadorItem;
 
         public string ValueToFind
         {
@@ -425,6 +427,7 @@ namespace mathador
                     Value5 = valueToSet;
                     break;
             }
+            CanGoToNext();
         }
 
         private void ClearValue()
@@ -457,6 +460,7 @@ namespace mathador
 
         private void LoadMathadorsValue(mathadorItem item)
         {
+            _currentMathadorItem = item;
             Value1 = item.Value1;
             Value2 = item.Value2;
             Value3 = item.Value3;
@@ -619,9 +623,17 @@ namespace mathador
             {
                 //launch good music               
                 audio.Play();
-                
                 keyboardInput = "";
+            }
 
+            if (keyboardInput.Contains("SOLVE"))
+            {
+                if (_currentMathadorItem != null)
+                {
+                    _errorMessage = MathadorSolver.GetMathadors(_currentMathadorItem.valuesToList(), _currentMathadorItem.ValueToFind)[0];
+                    PropertyChanged(this, new PropertyChangedEventArgs("errorMessage"));
+                }
+                keyboardInput = "";
             }
         }
 
