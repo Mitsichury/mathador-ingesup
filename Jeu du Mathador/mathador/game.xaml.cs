@@ -18,6 +18,7 @@ using Timer = System.Timers.Timer;
 using MathadorDatabase;
 using System.Windows.Input;
 using System.Media;
+using Solver;
 
 
 
@@ -218,6 +219,8 @@ namespace mathador
             }
         }
         private string _valueToFind;
+        private mathadorItem _currentMathadorItem;
+
         public string ValueToFind
         {
             get { return _valueToFind; }
@@ -397,13 +400,15 @@ namespace mathador
         }
 
         private void LoadMathadorsValue(mathadorItem item)
-        {        
+        {
+
+            _currentMathadorItem = item;
             Value1 = item.Value1;
             Value2 = item.Value2;
             Value3 = item.Value3;
             Value4 = item.Value4;
             Value5 = item.Value5;
-            ValueToFind = item.Value2;
+            ValueToFind = item.ValueToFind;
         }
 
         private void CloseMenu_OnClick(object sender, RoutedEventArgs e)
@@ -549,9 +554,17 @@ namespace mathador
             {
                 //launch good music               
                 audio.Play();
-                
                 keyboardInput = "";
+            }
 
+            if (keyboardInput.Contains("SOLVE"))
+            {
+                if (_currentMathadorItem != null)
+                {
+                    _errorMessage = MathadorSolver.GetMathadors(_currentMathadorItem.valuesToList(), _currentMathadorItem.ValueToFind)[0];
+                    PropertyChanged(this, new PropertyChangedEventArgs("errorMessage"));
+                }
+                keyboardInput = "";
             }
         }
 

@@ -46,9 +46,8 @@ namespace Solver
             }
 
             List<string> result = new List<string>();
-            DataTable dt = new DataTable();
-
             
+
             int i = 0;
 
             foreach (List<string> list in listeOperation)
@@ -57,9 +56,16 @@ namespace Solver
                 listeOperation[i].RemoveRange(0, 85);
                 foreach (string s in list)
                 {
-                    string resultat = dt.Compute(s, "").ToString();
+                    DataTable dt = new DataTable();
+                    DataColumn loDataColumn = new DataColumn("Eval", typeof(int), s);
+                    dt.Columns.Add(loDataColumn);
+                    dt.Rows.Add(0);
+                    string resultat = dt.Rows[0]["Eval"].ToString();                    
                     if (resultat == valueToFind)
                     {
+                        Console.WriteLine(valueToFind);
+                        Console.WriteLine(resultat);
+                        Console.WriteLine(s);
                         result.Add(s);
                     }
                 }
