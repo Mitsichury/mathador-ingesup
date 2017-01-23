@@ -1,0 +1,24 @@
+﻿<Window x:Class="mathador.HighScoreWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:util="clr-namespace:Wpf.Util;assembly=MathadorLibrary"
+        mc:Ignorable="d"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        ResizeMode="NoResize"
+        Title="HighScoreWindow" Height="300" Width="548">
+    <Grid>
+        <ListView ItemsSource="{Binding HighScoreList}" util:GridViewSort.AutoSort="true">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Joueur" DisplayMemberBinding="{Binding NomJoueur}" Width="70" util:GridViewSort.PropertyName="NomJoueur"/>
+                    <GridViewColumn Header="Points" DisplayMemberBinding="{Binding Points}" Width="60" util:GridViewSort.PropertyName="Points"/>
+                    <GridViewColumn Header="Temps moyens / Math" DisplayMemberBinding="{Binding TempsMoyen}" Width="150" util:GridViewSort.PropertyName="TempsMoyen"/>
+                    <GridViewColumn Header="Mathador réussis" DisplayMemberBinding="{Binding NombreMatahdor}" Width="140" util:GridViewSort.PropertyName="NombreMatahdor"/>
+                    <GridViewColumn Header="Points moyen" DisplayMemberBinding="{Binding PointsMoyen}" Width="110" util:GridViewSort.PropertyName="PointsMoyen"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>
