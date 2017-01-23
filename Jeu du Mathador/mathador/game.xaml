@@ -9,9 +9,20 @@
         Width="1024" Height="768" Background="#303030">
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MathadorLibrary;Component/UiElement.xaml" />
-            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="ValueButton" TargetType="Button">
+                <Setter Property="OverridesDefaultStyle" Value="True"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -87,7 +98,8 @@
                      Background="Transparent" BorderThickness="0,0,0,5" BorderBrush="Bisque">
                 <TextBlock FontSize="50" TextAlignment="Center" Foreground="White" Text="{Binding Value5}"/>
             </Button>
-            <TextBlock Grid.Column="5" Background="Aqua" Text="{Binding ValueToFind}" FontSize="100" TextAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="5" Background="Transparent" Text="{Binding ValueToFind}" 
+                       FontSize="100" TextAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
         </Grid>
         <Grid Row="3">
             <Grid.ColumnDefinitions>
@@ -124,7 +136,7 @@
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Content="Suivant" FontSize="30" Margin="20,10" IsEnabled="False" Click="NextButton_OnClick" x:Name="NextButton"/>
-            <Button Grid.Column="1" Content="Passer" FontSize="30" Margin="20,10" Name="SkipButton" Click="SkipButton_OnClick"/>
+            <Button Grid.Column="1" Content="Passer" FontSize="30" Margin="20,10" Name="SkipButton" Click="SkipButton_OnClick" IsEnabled="False"/>
             <TextBlock Grid.Column="2" FontSize="30" Text="{Binding ErrorMessage}" Foreground="Red" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Grid>
         <Grid Row="5">

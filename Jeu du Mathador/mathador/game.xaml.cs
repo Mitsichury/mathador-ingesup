@@ -278,6 +278,7 @@ namespace mathador
                     ValueShown2 = ((TextBlock) button.Content).Text;
                     _lastSelectedValue = button;
                 }
+                SelectValueButton(button);
                 Calcul();
             }
             else
@@ -292,6 +293,12 @@ namespace mathador
                 }
             }
             CanGoToNext();
+        }
+
+        private void SelectValueButton(Button button)
+        {
+            button.Background = Brushes.Transparent;
+            button.BorderBrush = Brushes.Red;
         }
 
         /// <summary>
