@@ -19,6 +19,7 @@ using MathadorDatabase;
 using System.Windows.Input;
 using System.Media;
 using System.Windows.Data;
+using MahApps.Metro.Controls;
 using Solver;
 
 
@@ -128,7 +129,7 @@ namespace mathador
             set
             {
                 _timer = value;
-                if(this._contentLoaded) PropertyChanged(this, new PropertyChangedEventArgs("timer"));
+                PropertyChanged(this, new PropertyChangedEventArgs("timer"));
             }
         }
 
@@ -363,7 +364,13 @@ namespace mathador
                 int result = 0;
                 int value1 = int.Parse(ValueShown1);
                 int value2 = int.Parse(ValueShown2);
-                switch (Operator)
+                if ((value1 == 0 || value2 == 0) && (Operator == "X" || Operator == "/"))
+                {
+                    result = -1;
+                    ErrorMessage = "Impossible de multiplier ou diviser par 0";
+                    error = true;
+                }
+                else switch (Operator)
                 {
                     case "+":
                         result = value1 + value2;
@@ -372,16 +379,21 @@ namespace mathador
                         result = value1 - value2;
                         break;
                     case "/":
-                        if (value2 <= 0)
+                        if (value2 > value1)
                         {
+                            ErrorMessage = "Opération non autorisée";
                             error = true;
-                            ErrorMessage = "Impossible de diviser par 0 !";
-                            break;
                         }
-                        result = value1 / value2;
+                        else
+                        {
+                            result = value1 / value2;
+                        }
                         break;
                     case "X":
                         result = value1 * value2;
+                        break;
+                    default:
+                        result = -1;
                         break;
                 }
                 if (result >= 0 && !error)
@@ -395,7 +407,7 @@ namespace mathador
                 }
                 else
                 {
-                    ErrorMessage = "Résultat inférieur à 0 impossible !";
+                    if (error) ErrorMessage = "Resultat inferieur à 0 impossible !";
                 }
                 ClearValue();
             }
@@ -454,6 +466,8 @@ namespace mathador
                 _remainingTime = PlayingTime;
                 _challengeBeginTime = _remainingTime;
                 TheFinalCountDown.Start();
+                //permet de stopper le timer en cas de fermeture du jeu
+                ((Window)Parent).Closing += delegate (object o, CancelEventArgs args) { TheFinalCountDown.Close(); };
             }
         }
 

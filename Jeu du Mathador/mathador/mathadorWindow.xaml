@@ -1,4 +1,4 @@
-﻿<Controls:MetroWindow x:Class="mathador.MainWindow"
+﻿<Controls:MetroWindow x:Class="mathador.mathadorWindow"
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"

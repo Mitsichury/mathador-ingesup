@@ -1,12 +1,13 @@
-﻿namespace mathador
+﻿using System.ComponentModel;
+
+namespace mathador
 {
     /// <summary>
-    /// Logique d'interaction pour MainWindow.xaml
+    /// Logique d'interaction pour mathadorWindow.xaml
     /// </summary>
-    public partial class MainWindow
+    public partial class mathadorWindow
     {        
-
-        public MainWindow()
+        public mathadorWindow()
         {
             InitializeComponent();
             Content = new LaunchMenu();
