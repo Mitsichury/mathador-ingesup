@@ -57,8 +57,11 @@ namespace mathador
         private int _totalFinishedChallengeTime;
 
         string keyboardInput = "";
-        static WindowsMediaPlayer remixPlayer = new WindowsMediaPlayer();
-        static WindowsMediaPlayer wizzPlayer = new WindowsMediaPlayer();
+
+        static Stream wizzStream = Properties.Resources.wizz;
+        static SoundPlayer wizzPlayer = new SoundPlayer(wizzStream);
+        static Stream remixStream = Properties.Resources.remix;
+        static SoundPlayer remixPlayer = new SoundPlayer(remixStream);
 
 
         public Game(string playerName)
@@ -625,10 +628,8 @@ namespace mathador
 
         public static void ThreadWizzSong()
         {
-            byte[] b = Properties.Resources.wizz;
-            FileInfo fileInfo = new FileInfo("wizz.wma");
-            wizzPlayer.URL = fileInfo.Name;
-            wizzPlayer.controls.play();
+            //SoundPlayer player = new SoundPlayer(wizzStream);
+            wizzPlayer.Play();
         }
 
 
@@ -649,8 +650,6 @@ namespace mathador
                 musicThread = new Thread(new ThreadStart(ThreadRemixMusic));
                 musicThread.Start();
 
-
-
                 keyboardInput = "";
             }
 
@@ -667,27 +666,8 @@ namespace mathador
 
         public static void ThreadRemixMusic()
         {
-            
-            byte[] b = Properties.Resources.remix;
-            FileInfo fileInfo = new FileInfo("remix.wma");
-            //FileStream fs = fileInfo.OpenWrite();
-            //fs.Write(b, 0, b.Length);
-            //fs.Close();
-            remixPlayer.URL = fileInfo.Name;
-            remixPlayer.controls.play();
-
-
-            //player = new WindowsMediaPlayer();
-            //byte[] b = Properties.Resources.remix;
-            //FileInfo fileInfo = new FileInfo("remix.mp3");
-            //player.URL = fileInfo.Name;
-
-            //while (Thread.CurrentThread.IsAlive)
-            //{
-            //    player.controls.play();
-            //    Thread.Sleep(5000);
-            //}
-
+            //SoundPlayer player = new SoundPlayer(remixStream);
+            remixPlayer.Play();
         }
 
         private bool IsMathador()

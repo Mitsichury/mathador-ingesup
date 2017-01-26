@@ -61,22 +61,20 @@ namespace mathador.Properties {
         }
         
         /// <summary>
-        ///   Recherche une ressource localisée de type System.Byte[].
+        ///   Recherche une ressource localisée de type System.IO.UnmanagedMemoryStream semblable à System.IO.MemoryStream.
         /// </summary>
-        internal static byte[] remix {
+        internal static System.IO.UnmanagedMemoryStream remix {
             get {
-                object obj = ResourceManager.GetObject("remix", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetStream("remix", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une ressource localisée de type System.Byte[].
+        ///   Recherche une ressource localisée de type System.IO.UnmanagedMemoryStream semblable à System.IO.MemoryStream.
         /// </summary>
-        internal static byte[] wizz {
+        internal static System.IO.UnmanagedMemoryStream wizz {
             get {
-                object obj = ResourceManager.GetObject("wizz", resourceCulture);
-                return ((byte[])(obj));
+                return ResourceManager.GetStream("wizz", resourceCulture);
             }
         }
     }
