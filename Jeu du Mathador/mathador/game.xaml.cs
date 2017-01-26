@@ -21,6 +21,7 @@ using System.Media;
 using System.Windows.Data;
 using MahApps.Metro.Controls;
 using Solver;
+using WMPLib;
 
 
 namespace mathador
@@ -56,7 +57,9 @@ namespace mathador
         private int _totalFinishedChallengeTime;
 
         string keyboardInput = "";
-        SoundPlayer audio = new SoundPlayer(mathador.Properties.Resources.Music);
+        static WindowsMediaPlayer remixPlayer = new WindowsMediaPlayer();
+        static WindowsMediaPlayer wizzPlayer = new WindowsMediaPlayer();
+
 
         public Game(string playerName)
         {
@@ -68,8 +71,8 @@ namespace mathador
             _playerName = playerName;
             _operatorPoints.Add("+", 1);
             _operatorPoints.Add("-", 2);
-            _operatorPoints.Add("/", 3);
-            _operatorPoints.Add("X", 1);
+            _operatorPoints.Add("÷", 3);
+            _operatorPoints.Add("×", 1);
         }
 
         private void OnTimedEvent(object sender, ElapsedEventArgs e)
@@ -378,7 +381,7 @@ namespace mathador
                     case "-":
                         result = value1 - value2;
                         break;
-                    case "/":
+                    case "÷":
                         if (value2 > value1)
                         {
                             ErrorMessage = "Opération non autorisée";
@@ -389,7 +392,7 @@ namespace mathador
                             result = value1 / value2;
                         }
                         break;
-                    case "X":
+                    case "×":
                         result = value1 * value2;
                         break;
                     default:
@@ -568,6 +571,11 @@ namespace mathador
 
         private void SkipButton_OnClick(object sender, RoutedEventArgs e)
         {
+            Thread wizzSongThread;
+
+            wizzSongThread = new Thread(new ThreadStart(ThreadWizzSong));
+            wizzSongThread.Start();
+
             wizz();
             foreach (var coup in Historique)
             {
@@ -615,13 +623,14 @@ namespace mathador
             wizzy.Start();
         }
 
+        public static void ThreadWizzSong()
+        {
+            byte[] b = Properties.Resources.wizz;
+            FileInfo fileInfo = new FileInfo("wizz.wma");
+            wizzPlayer.URL = fileInfo.Name;
+            wizzPlayer.controls.play();
+        }
 
-        //private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        //{
-        //    Console.WriteLine(e.Key);
-        //    keyboardInput = keyboardInput + e.Key.ToString();
-
-        //}
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
@@ -635,8 +644,13 @@ namespace mathador
             keyboardInput = keyboardInput + e.Key.ToString();
             if (keyboardInput.Contains("MUSIC"))
             {
-                //launch good music               
-                audio.Play();
+                Thread musicThread;
+
+                musicThread = new Thread(new ThreadStart(ThreadRemixMusic));
+                musicThread.Start();
+
+
+
                 keyboardInput = "";
             }
 
@@ -649,6 +663,31 @@ namespace mathador
                 }
                 keyboardInput = "";
             }
+        }
+
+        public static void ThreadRemixMusic()
+        {
+            
+            byte[] b = Properties.Resources.remix;
+            FileInfo fileInfo = new FileInfo("remix.wma");
+            //FileStream fs = fileInfo.OpenWrite();
+            //fs.Write(b, 0, b.Length);
+            //fs.Close();
+            remixPlayer.URL = fileInfo.Name;
+            remixPlayer.controls.play();
+
+
+            //player = new WindowsMediaPlayer();
+            //byte[] b = Properties.Resources.remix;
+            //FileInfo fileInfo = new FileInfo("remix.mp3");
+            //player.URL = fileInfo.Name;
+
+            //while (Thread.CurrentThread.IsAlive)
+            //{
+            //    player.controls.play();
+            //    Thread.Sleep(5000);
+            //}
+
         }
 
         private bool IsMathador()
