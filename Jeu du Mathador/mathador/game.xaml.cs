@@ -19,6 +19,7 @@ using MathadorDatabase;
 using System.Windows.Input;
 using System.Media;
 using System.Windows.Data;
+using generateur;
 using MahApps.Metro.Controls;
 using Solver;
 using WMPLib;
@@ -495,6 +496,10 @@ namespace mathador
 
         private void ShowMathadorMenu_OnClick(object sender, RoutedEventArgs e)
         {
+            if (MathadorCollection.Count == 0)
+            {
+                ImportFile();
+            }
             MathadorList mathadorWindow = new MathadorList(MathadorCollection);
             mathadorWindow.Show();
         }
@@ -683,6 +688,12 @@ namespace mathador
                 return true;
             }
             return false;
-        }        
+        }
+
+        private void OpenGeneratorMenu_OnClick(object sender, RoutedEventArgs e)
+        {
+            GenerateurWindow generateurWindow = new GenerateurWindow();
+            generateurWindow.Show();
+        }
     }
 }

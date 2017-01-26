@@ -39,22 +39,15 @@
             <DockPanel Height="40" VerticalAlignment="Top" >
                 <Menu DockPanel.Dock="Top" FontSize="20">
                     <MenuItem Header="Fichier">
-                        <MenuItem Header="Nouveau" />
+                        <MenuItem Header="Nouveau" Click="OpenGeneratorMenu_OnClick"/>
                         <MenuItem Header="Importer" Click="ImportMenu_OnClick"/>
-                        <MenuItem Header="Sauvegarder" />
                         <Separator />
                         <MenuItem Header="Fermer" Click="CloseMenu_OnClick"/>
                     </MenuItem>
                     <MenuItem Header="Jeu">
                         <MenuItem Header="Lancer" Click="LaunchGameMenu_OnClick"/>
-                        <MenuItem Header="Choisir un mathador" Click="ShowMathadorMenu_OnClick"/>
+                        <MenuItem Header="Voir les mathador" Click="ShowMathadorMenu_OnClick"/>
                         <MenuItem Header="Meilleurs scores" Click="ShowHighScore_OnClick"/>
-                    </MenuItem>
-                    <MenuItem Header="Options">
-                        <MenuItem />
-                    </MenuItem>
-                    <MenuItem Header="A Propos">
-                        <MenuItem />
                     </MenuItem>
                 </Menu>
                 <TextBox AcceptsReturn="True" />
