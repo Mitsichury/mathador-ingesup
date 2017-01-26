@@ -413,7 +413,7 @@ namespace mathador
                 }
                 else
                 {
-                    if (error) ErrorMessage = "Resultat inferieur à 0 impossible !";
+                    if (!error) ErrorMessage = "Resultat inferieur à 0 impossible !";
                 }
                 ClearValue();
             }
