@@ -628,7 +628,6 @@ namespace mathador
 
         public static void ThreadWizzSong()
         {
-            //SoundPlayer player = new SoundPlayer(wizzStream);
             wizzPlayer.Play();
         }
 
@@ -666,7 +665,6 @@ namespace mathador
 
         public static void ThreadRemixMusic()
         {
-            //SoundPlayer player = new SoundPlayer(remixStream);
             remixPlayer.Play();
         }
 
