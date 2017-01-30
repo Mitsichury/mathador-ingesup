@@ -68,7 +68,7 @@ namespace generateur
                     JObject obj = JObject.FromObject(item, serializer);
                     obj.WriteTo(writer);
                     writer.Flush();
-                    if (i % 100 == 0)
+                    if (i % 10 == 0)
                     {
                         Application.Current.Dispatcher.Invoke(
                             new Action(() => { progress.Text = (i / nb * 100) + "%"; }));

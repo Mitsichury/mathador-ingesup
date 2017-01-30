@@ -323,14 +323,14 @@ namespace mathador
             if (button != _selectedOperator)
             {
                 if (_selectedOperator != null)
-                    _selectedOperator.Background = Brushes.LightGray;
+                    _selectedOperator.Background = Brushes.Transparent;
                 _selectedOperator = button;
                 Operator = ((TextBlock) button.Content).Text;
                 _selectedOperator.Background = Brushes.Brown;
             }
             else
             {
-                _selectedOperator.Background = Brushes.LightGray;
+                _selectedOperator.Background = Brushes.Transparent;
                 _selectedOperator = null;
                 Operator = "";
             }
@@ -371,10 +371,10 @@ namespace mathador
                 int result = 0;
                 int value1 = int.Parse(ValueShown1);
                 int value2 = int.Parse(ValueShown2);
-                if ((value1 == 0 || value2 == 0) && (Operator == "X" || Operator == "/"))
+                if ((value1 == 0 || value2 == 0) && Operator == "÷")
                 {
                     result = -1;
-                    ErrorMessage = "Impossible de multiplier ou diviser par 0";
+                    ErrorMessage = "Impossible de diviser par 0";
                     error = true;
                 }
                 else switch (Operator)
@@ -386,15 +386,7 @@ namespace mathador
                         result = value1 - value2;
                         break;
                     case "÷":
-                        if (value2 > value1)
-                        {
-                            ErrorMessage = "Opération non autorisée";
-                            error = true;
-                        }
-                        else
-                        {
-                            result = value1 / value2;
-                        }
+                        result = value1 / value2;
                         break;
                     case "×":
                         result = value1 * value2;
@@ -452,7 +444,7 @@ namespace mathador
         {
             if (_firstSelectedValue != null) _firstSelectedValue.BorderBrush = Brushes.Bisque;
             if (_lastSelectedValue != null) _lastSelectedValue.BorderBrush = Brushes.Bisque;
-            if (_selectedOperator != null) _selectedOperator.Background = Brushes.Black;
+            if (_selectedOperator != null) _selectedOperator.Background = Brushes.Transparent;
             _firstSelectedValue = null;
             _lastSelectedValue = null;
             _selectedOperator = null;

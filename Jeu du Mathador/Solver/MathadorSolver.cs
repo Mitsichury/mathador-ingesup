@@ -62,7 +62,7 @@ namespace Solver
                     
                     if (resultat == valueToFind)
                     {
-                        Console.WriteLine(s + "=" + resultat);
+                        //Console.WriteLine(s + "=" + resultat);
                         result.Add(s);
                     }
                 }
